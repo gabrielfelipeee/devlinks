@@ -1,0 +1,5 @@
+@mixin animate_button($bg-color, $color) {
+    transform: translateY(-3px);
+    background-color: $bg-color;
+    color: $color;
+}

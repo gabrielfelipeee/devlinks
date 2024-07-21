@@ -1,0 +1,6 @@
+@import '../../styles/theme.scss';
+@import '../../styles/mixins/input_field.scss';
+
+.container_input_field {
+    @include input_field;
+}

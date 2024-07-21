@@ -1,0 +1,4 @@
+@import '../../styles/mixins/form_login_register.scss';
+
+@include form_login_register;
+@include media_queries_form_login_register;

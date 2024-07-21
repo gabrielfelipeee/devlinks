@@ -1,0 +1,82 @@
+@import './btn_link.scss';
+
+@mixin form_login_register {
+    section.container_login_register {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-color);
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
+        width: 90%;
+        max-width: 900px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+
+        .box_login_register {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-wrap: nowrap;
+            background-color: var(--primary-color);
+            padding: 2rem 1rem;
+            border-radius: 1rem 1rem 0 0;
+
+            h2 {
+                font-size: 1.3rem;
+                color: var(--secondary-color);
+            }
+
+            p {
+                color: var(--secondary-color);
+                margin: 1.5rem 0 2rem 0;
+            }
+
+            a {
+                @include btn_link;
+            }
+        }
+
+        .box_form {
+            background-color: var(--secondary-color);
+            border-radius: 0 0 1rem 1rem;
+            text-align: center;
+            width: 100%;
+
+            h1 {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: var(--primary-color);
+                text-transform: uppercase;
+                margin: 1.5rem 0;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 1.1rem;
+                padding: 2rem;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}
+
+@mixin media_queries_form_login_register {
+    @media screen and (min-width: 768px) {
+
+        section.container_login_register {
+            flex-direction: row;
+
+            .box_login_register {
+                border-radius: 1rem 0 0 1rem;
+                padding: 1rem 3rem;
+            }
+
+            .box_form {
+                border-radius: 0 1rem 1rem 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@import '../../styles/theme.scss';
+@import '../../styles/mixins/input_field.scss';
+
+.container_input_field_password {
+    @include input_field;
+
+    label {
+        .box_icons_eye {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 4rem;
+            cursor: pointer;
+        }
+    }
+}
