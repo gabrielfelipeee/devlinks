@@ -19,29 +19,27 @@ const Header = () => {
 
     return (
         <header className={styles.header}>
-            <div className={styles.box_header}>
-                <div className={styles.box_logo}>
-                    <IoInfinite className={styles.icon_logo} />
-                    <span className={styles.text_logo}>devlinks</span>
-                </div>
-                {
-                    isNavVisible && <nav className={styles.nav}>
-                        {
-                            navLinks.map(({ to, text, icon: Icon }) =>
-                                <Link
-                                    key={to}
-                                    to={to}
-                                    className={`${styles.link} ${pathname == to ? styles.active : ""}`}
-                                >
-                                    <Icon className={styles.icon} />
-                                    <span className={styles.text_icon_nav}>{text}</span>
-                                </Link>
-                            )
-                        }
-                    </nav>
-                }
-                <ToggleTheme />
+            <div className={styles.box_logo}>
+                <IoInfinite className={styles.icon_logo} />
+                <span className={styles.text_logo}>devlinks</span>
             </div>
+            {
+                isNavVisible && <nav className={styles.nav}>
+                    {
+                        navLinks.map(({ to, text, icon: Icon }) =>
+                            <Link
+                                key={to}
+                                to={to}
+                                className={`${styles.link} ${pathname == to ? styles.active : ""}`}
+                            >
+                                <Icon className={styles.icon} />
+                                <span className={styles.text_icon_nav}>{text}</span>
+                            </Link>
+                        )
+                    }
+                </nav>
+            }
+            <ToggleTheme />
         </header>
     )
 }

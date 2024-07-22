@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Header from "./componenets/Header";
 import PrivateRoute from "./componenets/PrivateRoute";
 import Home from "./pages/Home";
+import Links from "./pages/Links";
 
 function App() {
   return (
@@ -11,11 +12,17 @@ function App() {
       <Header />
       <main>
         <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+
           <Route path='/' element={<PrivateRoute />}>
             <Route index element={<Home />} />
           </Route>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
+          <Route path='/links' element={<PrivateRoute />}>
+            <Route index element={<Links />} />
+          </Route>
+
+
         </Routes>
       </main>
     </BrowserRouter>

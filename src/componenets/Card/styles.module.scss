@@ -1,0 +1,35 @@
+.container_card {
+    background-color: var(--bg-color);
+    padding: 1rem .5rem;
+    border-radius: .5rem;
+
+    .box_text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-weight: 600;
+
+        .btn_remove {
+            font-size: 30px;
+            transition: transform .5s;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+            }
+        }
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .container_card {
+        padding: 1rem 1.5rem;
+    }
+}

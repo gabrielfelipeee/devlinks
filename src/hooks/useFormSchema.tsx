@@ -30,12 +30,20 @@ const useFormSchema = () => {
                     .some(num => value.includes(num))
             }, { message: "Seu nome não pode ter números" }),
     });
-
     const loginFormSchema = baseFormSchema;
-    
+
+    const cardFormSchema = z.object({
+        platform: z.string()
+            .refine(field => field.length > 1, { message: "Selecione uma opção" }),
+        link: z.string().url("Insira uma URL válida")
+    });
+
+
+
     return {
         loginFormSchema,
         registerFormSchema,
+        cardFormSchema
     }
 };
 export default useFormSchema;

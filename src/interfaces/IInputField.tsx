@@ -3,7 +3,7 @@ import { IFormData } from './IFormData';
 
 export default interface IInputField {
     type?: string,
-    placeholder: string,
+    placeholder?: string,
     name: keyof IFormData,
     register: UseFormRegister<IFormData>,
     error?: boolean,

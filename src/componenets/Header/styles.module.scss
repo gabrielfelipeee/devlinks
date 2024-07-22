@@ -5,53 +5,103 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem .5rem;
     background-color: var(--primary-color);
-    padding: .8rem 0rem;
     color: var(--secondary-color);
+    width: 95%;
+    max-width: 1400px;
+    position: sticky;
+    z-index: 10;
+    top: 0;
+    margin: 0 auto ;
 
-    .box_header {
+    .nav {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        width: 95%;
-        max-width: 1024px;
-        margin: 0 auto;
+        gap: 2rem;
 
-        .nav {
+        .link {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
+            background-color: var(--primary-color);
+            border-radius: .3rem;
+            padding: .2rem .5rem;
+            border-bottom: 3px solid var(--secondary-color);
+            transition: .3s;
+
+            .icon {
+                font-size: 30px;
+                color: var(--secondary-color);
+                border-radius: .2rem;
+            }
+
+            .text_icon_nav {
+                display: none;
+            }
+
+            &.active {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            &:hover {
+                @include animate_button(rgba(255, 255, 255, 0.2), var(--secondary-color));
+            }
+        }
+    }
+
+    .box_logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon_logo {
+            font-size: 32px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border-radius: .5rem;
+            padding: .1rem .2rem;
+        }
+
+        .text_logo {
+            display: none;
+            line-height: none;
+        }
+    }
+}
+
+
+@media screen and (min-width: 768px) {
+    .header {
+        border-radius: .5rem;
+        padding: 1rem 2rem;
+
+        .nav {
+            gap: 3rem;
 
             .link {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: var(--primary-color);
-                border-radius: .3rem;
-                padding: .2rem .5rem;
-                border-bottom: 3px solid var(--secondary-color);
-                transition: .3s;
+                text-decoration: none;
+                color: var(--secondary-color);
+                font-weight: bold;
+                margin: auto;
+
                 .icon {
-                    font-size: 30px;
-                    color: var(--secondary-color);
-                    border-radius: .2rem;
+                    margin-right: .3rem;
                 }
 
                 .text_icon_nav {
-                    display: none;
-                }
-
-                &.active {
-                    background-color: rgba(255, 255, 255, 0.2);
-                }
-                &:hover {
-                    @include animate_button(rgba(255, 255, 255, 0.2), var(--secondary-color));
+                    display: block;
                 }
             }
         }
 
         .box_logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .3rem;
+
             .icon_logo {
                 font-size: 32px;
                 background-color: var(--secondary-color);
@@ -61,53 +111,10 @@
             }
 
             .text_logo {
-                display: none;
-                line-height: none;
-            }
-        }
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .header {
-        .box_header {
-            .nav {
-                gap: 3rem;
-
-                .link {
-                    text-decoration: none;
-                    color: var(--secondary-color);
-                    font-weight: bold;
-                    margin: auto;
-                    .icon {
-                        margin-right: .3rem;
-                    }
-                    .text_icon_nav {
-                        display: block;
-                    }
-                }
-            }
-
-            .box_logo {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: .3rem;
-
-                .icon_logo {
-                    font-size: 32px;
-                    background-color: var(--secondary-color);
-                    color: var(--primary-color);
-                    border-radius: .5rem;
-                    padding: .1rem .2rem;
-                }
-
-                .text_logo {
-                    display: block;
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    color: var(--secondary-color);
-                }
+                display: block;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--secondary-color);
             }
         }
     }
