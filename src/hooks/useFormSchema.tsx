@@ -2,19 +2,6 @@ import { z } from "zod";
 
 const useFormSchema = () => {
     const baseFormSchema = z.object({
-        email: z.string()
-            .min(1, "Insira seu email")
-            .email("Formato de email inválido")
-            .toLowerCase(),
-        password: z.string()
-            .min(8, "A senha precisa ter pelo menos 8 caracteres")
-            .refine(value => {
-                const specialCharacterRegex = /[!@#$%^&*(),.?":;{}|<>]/;
-                return specialCharacterRegex.test(value);
-            }, { message: "A senha deve conter pelo menos um caractere especial" })
-    });
-
-    const registerFormSchema = baseFormSchema.extend({
         name: z.string()
             .min(1, "Insira seu nome")
             .transform(name => { // Primeira letra de cada nome em uppercase e o restante em lowercase
@@ -29,21 +16,48 @@ const useFormSchema = () => {
                 return !numbers.split("")
                     .some(num => value.includes(num))
             }, { message: "Seu nome não pode ter números" }),
+        email: z.string()
+            .min(1, "Insira seu email")
+            .email("Formato de email inválido")
+            .toLowerCase(),
+        password: z.string()
+            .min(8, "A senha precisa ter pelo menos 8 caracteres")
+            .refine(value => {
+                const specialCharacterRegex = /[!@#$%^&*(),.?":;{}|<>]/;
+                return specialCharacterRegex.test(value);
+            }, { message: "A senha deve conter pelo menos um caractere especial" })
     });
-    const loginFormSchema = baseFormSchema;
 
+    // Esquema (validação) do formulário de cadastro de usuário
+    const registerFormSchema = baseFormSchema;
+
+    // Esquema (validação) do formulário de login
+    const loginFormSchema = baseFormSchema.omit({
+        name: true // Remove o campo de name
+    });
+
+    // Esquema (validação) do formulário de cadastro de links
     const cardFormSchema = z.object({
         platform: z.string()
             .refine(field => field.length > 1, { message: "Selecione uma opção" }),
         link: z.string().url("Insira uma URL válida")
     });
 
-
+    // Esquema (validação) do formulário de atualização do usuário
+    const profileFormSchema = baseFormSchema
+        .omit({
+            password: true // Remove o campo password
+        })
+        .extend({
+            avatar: z.string().url("Insira uma URL válida") // Adiciona o campo de avatar
+        }
+        );
 
     return {
         loginFormSchema,
         registerFormSchema,
-        cardFormSchema
+        cardFormSchema,
+        profileFormSchema
     }
 };
 export default useFormSchema;

@@ -1,15 +1,21 @@
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IFormData } from '../interfaces/IFormData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useFormSchema from './useFormSchema';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-const URL_LOGIN = "http://localhost:5287/api/Login";
+import apiClient from '../services/axiosInstance';
+import { useMutation } from 'react-query';
+import { jwtDecode } from 'jwt-decode';
+import { IToken } from '../interfaces/IToken';
+import { ILoginData } from '../interfaces/ILoginData';
 
 const useLogin = () => {
     const navigate = useNavigate();
     const { loginFormSchema } = useFormSchema();
+
+    const [loginData, setLoginData] = useState<ILoginData>();
+    const [showModal, setShowModal] = useState(false);
 
     const {
         register,
@@ -19,29 +25,53 @@ const useLogin = () => {
         resolver: zodResolver(loginFormSchema)
     });
 
-    const onSubmit = async (data: IFormData) => {
-        let email = { email: data.email };
-        try {
-            const response = await axios.post(URL_LOGIN, email, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            const data = await response.data;
-            localStorage.setItem("token", data.acessToken);
-       
-            navigate('/');
+    const mutationLogin = useMutation(
+        (data: IFormData) => apiClient.post('/login', data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }),
+        {
+            onSuccess: (response) => {
+                const responseData = response.data;
+                if (responseData.authenticated) {
+                    sessionStorage.setItem("token", responseData.acessToken);
+                    const decodedToken = jwtDecode<IToken>(responseData.acessToken!);
+                    sessionStorage.setItem("userIdAuthenticated", decodedToken.nameid);
+                    navigate('/');
+                };
+                setLoginData(responseData);
+            },
+            onError: (error) => {
+                console.error("Erro ao fazer login", error);
+            }
         }
-        catch (error) {
-            console.error(error)
+    );
+    const onSubmit = (data: IFormData) => {
+        mutationLogin.mutate(data);
+    };
+
+    // Mostrar modal de erro
+    useEffect(() => {
+        if (loginData?.authenticated === false) {
+            setShowModal(true);
         }
-    }
+        const timer = setTimeout(() => {
+            setLoginData(undefined);
+            setShowModal(false);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [loginData, setLoginData]);
 
     return {
         register,
         handleSubmit,
         errors,
-        onSubmit
-    }
+        onSubmit,
+        loginData,
+        showModal
+    };
 };
+
 export default useLogin;

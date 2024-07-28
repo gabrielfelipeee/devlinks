@@ -1,6 +1,6 @@
 import styles from './styles.module.scss';
 import IInputField from "../../../../interfaces/IInputField";
-import { FaGithub, FaFacebook, FaYoutube, FaInstagram } from "react-icons/fa";
+import { FaGithub, FaFacebook, FaYoutube, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useState } from 'react';
 
 const ListDropDown = (
@@ -16,7 +16,8 @@ const ListDropDown = (
         { icon: FaYoutube, name: "YouTube" },
         { icon: FaFacebook, name: "Facebook" },
         { icon: FaGithub, name: "GitHub" },
-        { icon: FaInstagram, name: "Instagram" }
+        { icon: FaInstagram, name: "Instagram" },
+        { icon: FaLinkedin, name: "Linkedin" }
     ];
     const SelectedIcon = platforms.find(platform => platform.name === selectedPlatform)?.icon;
 
@@ -29,7 +30,7 @@ const ListDropDown = (
                     {...register(name)}
                     onChange={({ target: { value } }) => setSelectedPlatform(value)}
                 >
-                    <option value="0">Selecione uma plataforma</option>
+                    <option value="" disabled hidden>Selecione uma plataforma</option>
                     {
                         platforms.map(({ name }, index) =>
                             <option key={index} value={name}>
@@ -38,7 +39,6 @@ const ListDropDown = (
                         )}
                 </select>
             </div>
-
             {error && <p className={styles.input_error_message}>{errorMessage}</p>}
         </div>
     )

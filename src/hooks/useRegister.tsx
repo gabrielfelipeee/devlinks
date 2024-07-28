@@ -2,10 +2,9 @@ import { useForm } from 'react-hook-form';
 import { IFormData } from '../interfaces/IFormData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useFormSchema from './useFormSchema';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-const URL_REGISTER = "http://localhost:5287/api/Users";
+import apiClient from '../services/axiosInstance';
+import { useMutation, useQueryClient } from 'react-query';
 
 const useRegister = () => {
     const navigate = useNavigate();
@@ -18,26 +17,26 @@ const useRegister = () => {
         resolver: zodResolver(registerFormSchema)
     });
 
-    const onSubmit = async (data: IFormData) => {
-        const user = {
-            name: data.name,
-            email: data.email
-        };
-
-        try {
-            const responde = await axios.post(URL_REGISTER, user, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await responde.data;
-            console.log(data);
-            navigate('/login');
+    const queryClient = useQueryClient();
+    const mutationRegister = useMutation(
+        (data: IFormData) => apiClient.post('/users', data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['all-users']);
+                navigate('/login');
+            },
+            onError: (error) => {
+                console.error("Erro ao cadastrar usuário", error);
+            }
         }
-        catch (error) {
-            console.error("Erro ao adicionar user:", error);
-        }
+    );
+    const onSubmit = (data: IFormData) => {
+        mutationRegister.mutate(data);
     };
 
     return {

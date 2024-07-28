@@ -1,19 +1,20 @@
 import styles from './styles.module.scss';
-import { IoInfinite, IoEyeOutline } from "react-icons/io5";
+import { IoInfinite } from "react-icons/io5";
 import { FaLink } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { FaEye } from "react-icons/fa";
-
 import ToggleTheme from "../ToggleTheme";
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const { pathname } = useLocation();
+    const userIdAuthenticated = sessionStorage.getItem("userIdAuthenticated");
 
+    const token = sessionStorage.getItem("token");
     const navLinks = [
-        { to: '/links', icon: FaLink, text: 'Links' },
-        { to: '/profile', icon: CgProfile, text: 'Profile' },
-        { to: '/preview', icon: FaEye, text: 'Preview' }
+        { to: '/', icon: FaLink, text: 'Links' },
+        { to: '/perfil', icon: CgProfile, text: 'Profile' },
+        { to: `/${userIdAuthenticated}`, icon: FaEye, text: 'Preview' }
     ];
     const isNavVisible = !['/login', '/cadastro'].includes(pathname);
 
@@ -24,7 +25,7 @@ const Header = () => {
                 <span className={styles.text_logo}>devlinks</span>
             </div>
             {
-                isNavVisible && <nav className={styles.nav}>
+                (isNavVisible && token) && <nav className={styles.nav}>
                     {
                         navLinks.map(({ to, text, icon: Icon }) =>
                             <Link

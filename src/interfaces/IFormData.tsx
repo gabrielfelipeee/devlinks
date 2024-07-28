@@ -3,6 +3,7 @@ export interface IFormData {
     link?: string,
     
     name?: string,
-    email: string,
-    password: string
+    email?: string,
+    password: string,
+    avatar?: string
 };

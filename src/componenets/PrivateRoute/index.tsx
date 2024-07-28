@@ -1,33 +1,25 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-
-interface IDecodedToken {
-    unique_name: string[],
-    jti: string,
-    nbf: number,
-    exp: number,
-    iat: number,
-    iss: string,
-    aud: string
-};
+import { IToken } from "../../interfaces/IToken";
 
 const PrivateRoute = () => {
     const [isAuth, setIsAuth] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         if (token) {
             try {
-                const decodedToken = jwtDecode<IDecodedToken>(token);
+                const decodedToken = jwtDecode<IToken>(token);
                 const currentTime = Date.now() / 1000; // Hora atual em segundos
 
                 if (decodedToken.exp > currentTime) {
                     setIsAuth(true);
                 } else {
                     setIsAuth(false);
-                    localStorage.removeItem("token"); // removendo o token expirado
+                    sessionStorage.removeItem("token"); // removendo o token expirado
+                    sessionStorage.removeItem("userIdAuthenticated"); // removendo o id do usuário 'autenticado'
                 }
             }
             catch (error) {

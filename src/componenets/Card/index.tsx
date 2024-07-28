@@ -1,23 +1,41 @@
 import styles from './styles.module.scss';
 import { IoClose } from "react-icons/io5";
 
-import useCard from '../../hooks/useCard';
 import Button from '../Button';
 import InputField from '../InputField';
 import ListDropDown from './components/ListDropDown';
+import { useEffect } from 'react';
+import ILink from '../../interfaces/ILink';
+import useLinkMutationsAndValidation from '../../hooks/useLinkMutationsAndValidation';
 
 interface ICard {
-    indexLink: number,
-    removeLink : () => void
-}
+    id: string,
+    indexLink: number;
+    removeCard: () => void;
+    dataLink: ILink,
+};
 
-const Card = ({ indexLink, removeLink }: ICard) => {
+const Card = ({
+    indexLink,
+    dataLink,
+    removeCard,
+    id
+}: ICard) => {
     const {
         errors,
         handleSubmit,
         register,
-        onSubmit
-    } = useCard();
+        onSubmit,
+        setValue,
+        removeLink
+    } = useLinkMutationsAndValidation();
+
+    useEffect(() => {
+        setValue('platform', dataLink?.platform);
+        setValue('link', dataLink?.link);
+        
+    }, [dataLink, setValue]);
+
 
     return (
         <div className={styles.container_card}>
@@ -28,11 +46,14 @@ const Card = ({ indexLink, removeLink }: ICard) => {
                 </div>
                 <IoClose
                     className={styles.btn_remove}
-                    onClick={removeLink}
+                    onClick={() => {
+                        removeCard();
+                        id && removeLink(id);
+                    }}
                 />
             </div>
             <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit((data) => onSubmit(data, id))}
                 className={styles.form}
             >
                 <ListDropDown
@@ -48,7 +69,11 @@ const Card = ({ indexLink, removeLink }: ICard) => {
                     error={!!errors?.link}
                     errorMessage={errors?.link?.message}
                 />
-                <Button>Salvar</Button>
+                <Button>
+                    {
+                        dataLink && (dataLink.link || dataLink.platform) ? "atualizar" : "salvar"
+                    }
+                </Button>
             </form>
         </div>
     )
