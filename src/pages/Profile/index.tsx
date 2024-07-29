@@ -1,16 +1,21 @@
+import { Controller } from 'react-hook-form';
 import Button from '../../componenets/Button';
 import InputField from '../../componenets/InputField';
-import useProfile from '../../hooks/useUsersMutationsAndValidation';
 import styles from './index.module.scss';
+import useUserMutation from '../../hooks/useUserMutation';
+import useProfileForm from '../../hooks/useProfileForm';
 
 const Profile = () => {
     const {
+        updateProfile
+    } = useUserMutation();
+    const {
+        control,
         errors,
         handleSubmit,
-        onSubmit,
-        register,
         imagePreview
-    } = useProfile();
+    } = useProfileForm();
+
     return (
         <div className={styles.container_profile}>
             <div className={styles.box_info}>
@@ -18,7 +23,7 @@ const Profile = () => {
                 <span className={styles.text}>Adicione detalhes ao seu perfil</span>
             </div>
             <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit((data) => updateProfile(data))}
                 className={styles.form}
             >
                 {imagePreview && (
@@ -26,26 +31,41 @@ const Profile = () => {
                         <img className={styles.img} src={imagePreview} alt="Foto de perfil" />
                     </div>
                 )}
-                <InputField
+                <Controller
                     name="avatar"
-                    register={register}
-                    error={!!errors?.avatar?.message}
-                    errorMessage={errors?.avatar?.message}
-                    placeholder="insira a url da sua foto de perfil"
+                    control={control}
+                    render={({ field }) => (
+                        <InputField
+                            placeholder="Insira seu Link"
+                            field={field}
+                            error={!!errors?.avatar}
+                            errorMessage={errors?.avatar?.message}
+                        />
+                    )}
                 />
-                <InputField
+                <Controller
                     name="name"
-                    register={register}
-                    error={!!errors?.name?.message}
-                    errorMessage={errors?.name?.message}
-                    placeholder="atualize seu nome"
+                    control={control}
+                    render={({ field }) => (
+                        <InputField
+                            placeholder="Insira seu Link"
+                            field={field}
+                            error={!!errors?.name}
+                            errorMessage={errors?.name?.message}
+                        />
+                    )}
                 />
-                <InputField
+                <Controller
                     name="email"
-                    register={register}
-                    error={!!errors?.email?.message}
-                    errorMessage={errors?.email?.message}
-                    placeholder="atualize seu email"
+                    control={control}
+                    render={({ field }) => (
+                        <InputField
+                            placeholder="Insira seu Link"
+                            field={field}
+                            error={!!errors?.email}
+                            errorMessage={errors?.email?.message}
+                        />
+                    )}
                 />
                 <Button>Salvar</Button>
             </form>

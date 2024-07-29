@@ -1,12 +1,9 @@
-import { useForm } from "react-hook-form"
-import { IFormData } from "../interfaces/IFormData"
-import { zodResolver } from "@hookform/resolvers/zod"
-import useFormSchema from "./useFormSchema"
 import apiClient from "../services/axiosInstance"
 import { useMutation, useQueryClient } from "react-query"
+import { CardFormData } from "./useFormSchema"
 
 // Adicionar um link
-const addLink = async (data: IFormData, token: string) => {
+const addLink = async (data: CardFormData, token: string) => {
 
     const response = await apiClient.post('/links', data, {
         headers: {
@@ -17,7 +14,7 @@ const addLink = async (data: IFormData, token: string) => {
 };
 
 // Atualizar um link
-const updateLink = async (data: IFormData, id: string, token: string) => {
+const updateLink = async (data: CardFormData, id: string, token: string) => {
     const link = { id, platform: data.platform, link: data.link }
     const response = await apiClient.put(`/links`, link, {
         headers: {
@@ -29,21 +26,12 @@ const updateLink = async (data: IFormData, id: string, token: string) => {
     return response.data;
 };
 
-const useLinkMutationsAndValidation = () => {
+const useLinksMutations = () => {
     const queryClient = useQueryClient();
     const token = sessionStorage.getItem("token");
-    const { cardFormSchema } = useFormSchema();
-    const {
-        handleSubmit,
-        register,
-        formState: { errors },
-        setValue
-    } = useForm<IFormData>({
-        resolver: zodResolver(cardFormSchema),
-    });
 
     const mutationAddLink = useMutation(
-        (data: IFormData) => addLink(data, token!),
+        (data: CardFormData) => addLink(data, token!),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['authenticated-links']);
@@ -55,7 +43,7 @@ const useLinkMutationsAndValidation = () => {
         }
     );
     const mutationUpdateLink = useMutation(
-        ({ data, id }: { data: IFormData, id: string }) => updateLink(data, id, token!),
+        ({ data, id }: { data: CardFormData, id: string }) => updateLink(data, id, token!),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['authenticated-links']);
@@ -84,23 +72,10 @@ const useLinkMutationsAndValidation = () => {
         }
     );
 
-    const onSubmit = async (data: IFormData, id: string) => {
-        if (id?.length > 0) {
-            mutationUpdateLink.mutate({ data, id });
-        } else {
-            mutationAddLink.mutate(data);
-        }
-    };
-
     return {
-        register,
-        handleSubmit,
-        onSubmit,
-        errors,
-        setValue,
-
+        addLink: mutationAddLink.mutate,
+        updateLink: mutationUpdateLink.mutate,
         removeLink: mutationRemoveLink.mutate,
-
         isLoadingAdd: mutationAddLink.isLoading,
         errorAdd: mutationAddLink.error,
         isLoadingUpdate: mutationUpdateLink.isLoading,
@@ -109,4 +84,4 @@ const useLinkMutationsAndValidation = () => {
         errorRemove: mutationRemoveLink.error
     }
 }
-export default useLinkMutationsAndValidation;
+export default useLinksMutations;

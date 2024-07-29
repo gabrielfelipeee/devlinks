@@ -4,12 +4,10 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { GiPadlock } from "react-icons/gi";
 import IInputField from '../../interfaces/IInputField';
 
-
 const InputFieldPassword = (
     {
         placeholder,
-        name,
-        register,
+        field,
         errorMessage,
         error
     }: IInputField
@@ -26,7 +24,8 @@ const InputFieldPassword = (
                     className={error ? (styles.input_error) : ""}
                     type={showPassword ? "text" : "password"}
                     placeholder={placeholder}
-                    {...register(name)}
+                    {...field}
+                    value={field.value || ""}
                 />
                 <GiPadlock className={styles.icon} />
                 <div

@@ -7,12 +7,14 @@
     align-items: center;
     padding: 1rem .5rem;
     background-color: var(--primary-color);
-    color: var(--secondary-color);
+    color: var(--font-color);
     max-width: 1400px;
     position: sticky;
     z-index: 10;
     top: 0;
-    margin: 0 auto ;
+    margin: 0 auto;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.05);
+
 
     .nav {
         display: flex;
@@ -24,16 +26,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--primary-color);
-            border-radius: .3rem;
-            padding: .2rem .5rem;
-            border-bottom: 3px solid var(--secondary-color);
-            transition: .3s;
+            color: var(--font-color);
+            transition: color .3s;
 
             .icon {
-                font-size: 30px;
-                color: var(--secondary-color);
-                border-radius: .2rem;
+                font-size: 28px;
             }
 
             .text_icon_nav {
@@ -41,11 +38,12 @@
             }
 
             &.active {
-                background-color: rgba(255, 255, 255, 0.2);
+                color: var(--secondary-color);
+                border-bottom: 2px solid var(--secondary-color);
             }
 
             &:hover {
-                @include animate_button(rgba(255, 255, 255, 0.2), var(--secondary-color));
+                color: var(--secondary-color);
             }
         }
     }
@@ -76,21 +74,23 @@
         width: 95%;
         border-radius: .5rem;
         padding: 1rem 2rem;
+
         .nav {
             gap: 3rem;
 
             .link {
                 text-decoration: none;
-                color: var(--secondary-color);
-                font-weight: bold;
+                font-weight: 700;
                 margin: auto;
 
                 .icon {
                     margin-right: .3rem;
+                    font-size: 1rem;
                 }
 
                 .text_icon_nav {
                     display: block;
+                    font-size: 1rem;
                 }
             }
         }
@@ -101,19 +101,11 @@
             align-items: center;
             gap: .3rem;
 
-            .icon_logo {
-                font-size: 32px;
-                background-color: var(--secondary-color);
-                color: var(--primary-color);
-                border-radius: .5rem;
-                padding: .1rem .2rem;
-            }
-
             .text_logo {
                 display: block;
                 font-size: 1.5rem;
                 font-weight: bold;
-                color: var(--secondary-color);
+                color: var(--font-color);
             }
         }
     }

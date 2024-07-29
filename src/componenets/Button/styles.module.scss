@@ -8,9 +8,9 @@
     font-weight: 700;
     padding: .3rem 1rem;
     border-radius: .5rem;
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--font-color);
+    border: 2px solid var(--secondary-color);
     width: 60%;
     max-width: 250px;
     margin: 0 auto;
@@ -19,6 +19,6 @@
     transition: .5s;
 
     &:hover {
-        @include animate_button(var(--primary-color), var(--secondary-color));
+        @include animate_button(var(--secondary-color), var(--primary-color));
     }
 }

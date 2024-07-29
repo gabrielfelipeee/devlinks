@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IFormData } from '../interfaces/IFormData';
 import { zodResolver } from '@hookform/resolvers/zod';
-import useFormSchema from './useFormSchema';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../services/axiosInstance';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { jwtDecode } from 'jwt-decode';
 import { IToken } from '../interfaces/IToken';
 import { ILoginData } from '../interfaces/ILoginData';
+import { loginFormSchema } from './useFormSchema';
 
 const useLogin = () => {
     const navigate = useNavigate();
-    const { loginFormSchema } = useFormSchema();
 
     const [loginData, setLoginData] = useState<ILoginData>();
     const [showModal, setShowModal] = useState(false);
@@ -25,6 +24,7 @@ const useLogin = () => {
         resolver: zodResolver(loginFormSchema)
     });
 
+    const queryClient = useQueryClient();
     const mutationLogin = useMutation(
         (data: IFormData) => apiClient.post('/login', data, {
             headers: {
@@ -35,6 +35,7 @@ const useLogin = () => {
         {
             onSuccess: (response) => {
                 const responseData = response.data;
+                queryClient.invalidateQueries(['all-links']);
                 if (responseData.authenticated) {
                     sessionStorage.setItem("token", responseData.acessToken);
                     const decodedToken = jwtDecode<IToken>(responseData.acessToken!);
@@ -70,7 +71,8 @@ const useLogin = () => {
         errors,
         onSubmit,
         loginData,
-        showModal
+        showModal,
+        login: mutationLogin.mutate
     };
 };
 

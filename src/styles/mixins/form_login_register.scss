@@ -2,16 +2,16 @@
 
 @mixin form_login_register {
     section.container_login_register {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        background-color: var(--bg-color);
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
-        width: 90%;
         max-width: 900px;
         position: absolute;
         transform: translate(-50%, -50%);
         top: 50%;
         left: 50%;
+        border-radius: 1rem;
 
         .box_login_register {
             display: flex;
@@ -19,17 +19,16 @@
             justify-content: center;
             align-items: center;
             text-wrap: nowrap;
-            background-color: var(--primary-color);
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
             padding: 2rem 1rem;
             border-radius: 1rem 1rem 0 0;
 
             h2 {
                 font-size: 1.3rem;
-                color: var(--secondary-color);
             }
 
             p {
-                color: var(--secondary-color);
                 margin: 1.5rem 0 2rem 0;
             }
 
@@ -39,7 +38,7 @@
         }
 
         .box_form {
-            background-color: var(--secondary-color);
+            background-color: var(--primary-color);
             border-radius: 0 0 1rem 1rem;
             text-align: center;
             width: 100%;
@@ -47,7 +46,6 @@
             h1 {
                 font-size: 1.3rem;
                 font-weight: 700;
-                color: var(--primary-color);
                 text-transform: uppercase;
                 margin: 1.5rem 0;
             }

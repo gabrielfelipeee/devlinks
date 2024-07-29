@@ -1,23 +1,25 @@
 import styles from './styles.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 import InputField from "../../componenets/InputField";
 import InputFieldPassword from "../../componenets/InputFieldPassword";
 import Button from "../../componenets/Button";
 import useLogin from '../../hooks/useLogin';
 import ModalMessage from '../../componenets/ModalMessage';
-import { useEffect, useState } from 'react';
-
+import { LoginFormData, loginFormSchema, useCustomForm } from '../../hooks/useFormSchema';
+import { Controller } from 'react-hook-form';
 
 const Login = () => {
     const {
-        register,
-        errors,
-        handleSubmit,
-        onSubmit,
         loginData,
-        showModal
+        showModal,
+        login
     } = useLogin();
+    const {
+        control,
+        handleSubmit,
+        formState: { errors }
+    } = useCustomForm<LoginFormData>(loginFormSchema);
+
 
     return (
         <>
@@ -32,22 +34,31 @@ const Login = () => {
                     <h1>Entre na sua conta </h1>
                     <form
                         noValidate
-                        onSubmit={handleSubmit(onSubmit)}
+                        onSubmit={handleSubmit((data) => login(data))}
                     >
-                        <InputField
-                            type="email"
+                        <Controller
                             name="email"
-                            placeholder="email"
-                            register={register}
-                            error={!!errors?.email}
-                            errorMessage={errors?.email?.message}
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    placeholder="email"
+                                    field={field}
+                                    error={!!errors?.email}
+                                    errorMessage={errors?.email?.message}
+                                />
+                            )}
                         />
-                        <InputFieldPassword
+                        <Controller
                             name="password"
-                            placeholder="senha"
-                            register={register}
-                            error={!!errors?.password}
-                            errorMessage={errors?.password?.message}
+                            control={control}
+                            render={({ field }) => (
+                                <InputFieldPassword
+                                    placeholder="senha"
+                                    field={field}
+                                    error={!!errors?.password}
+                                    errorMessage={errors?.password?.message}
+                                />
+                            )}
                         />
                         <Button>Entrar</Button>
                     </form>

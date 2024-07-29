@@ -37,7 +37,7 @@ const Links = () => {
                     counterLinks.map((item, index) => (
                         (item < 5) &&
                         <Card
-                            key={linksUserAuthenticated[index]?.id || index}
+                            key={index}
                             id={linksUserAuthenticated[index]?.id!}
                             indexLink={item + 1}
                             removeCard={removeCard}

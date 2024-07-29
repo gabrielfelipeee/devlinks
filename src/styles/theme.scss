@@ -1,15 +1,15 @@
 .light {
-    --primary-color: #007BFF;
-    --secondary-color: #ffffff;
-    --input_font-color: #555555;
-    --bg-color: #f0f2f5;
-    --font-color: #555555;
+    --primary-color: #fafafa;
+    --secondary-color: #ff4500;
+    --bg-color: #ffffff;
+    --font-color: #2c3e50;
+    --color-error: red;
 }
 
 .dark {
-    --primary-color: #1E90FF;
-    --secondary-color: #0f1312;
-    --input_font-color: #bebebe;
-    --bg-color: #2c2c2c;
-    --font-color: #fff;
+    --primary-color: #181818;
+    --secondary-color: #ff4500;
+    --bg-color: #2e2e2e;
+    --font-color: #ecf0f1;
+    --color-error: red;
 }

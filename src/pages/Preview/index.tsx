@@ -3,13 +3,12 @@ import CardLink from './CardLink';
 import styles from './styles.module.scss';
 import { useUsers } from '../../context/UsersContext';
 import { useLinks } from '../../context/LinksContext';
-import useUsersMutationsAndValidation from '../../hooks/useUsersMutationsAndValidation';
-
+import useProfileForm from '../../hooks/useProfileForm';
 
 const Preview = () => {
     const { pathname } = useLocation();
     const { users, error, isLoading } = useUsers();
-    const { imagePreview } = useUsersMutationsAndValidation();
+    const { imagePreview } = useProfileForm();
     const { allLinks } = useLinks();
 
     const currentUser = users?.find(user => user.id === pathname.substring(1));

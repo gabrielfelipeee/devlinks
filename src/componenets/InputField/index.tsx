@@ -5,8 +5,7 @@ import IInputField from '../../interfaces/IInputField';
 const InputField = (
     {
         placeholder,
-        name,
-        register,
+        field,
         errorMessage,
         error,
         type = "text",
@@ -17,7 +16,7 @@ const InputField = (
         { name: "name", icon: MdPersonAddAlt1 },
         { name: "link", icon: MdOutlineAddLink }
     ];
-    const Icon = icons.find(item => item.name === name)?.icon;
+    const Icon = icons.find(item => item.name === field.name)?.icon;
 
     return (
         <div className={styles.container_input_field}>
@@ -26,7 +25,8 @@ const InputField = (
                     className={error ? styles.input_error : ""}
                     type={type}
                     placeholder={placeholder}
-                    {...register(name)}
+                    {...field}
+                    value={field.value || ""}
                 />
                 {Icon && <Icon className={styles.icon} />}
             </label>

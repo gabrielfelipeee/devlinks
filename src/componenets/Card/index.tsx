@@ -1,18 +1,19 @@
 import styles from './styles.module.scss';
 import { IoClose } from "react-icons/io5";
-
 import Button from '../Button';
-import InputField from '../InputField';
 import ListDropDown from './components/ListDropDown';
 import { useEffect } from 'react';
 import ILink from '../../interfaces/ILink';
-import useLinkMutationsAndValidation from '../../hooks/useLinkMutationsAndValidation';
+import { Controller } from 'react-hook-form';
+import { CardFormData, cardFormSchema, useCustomForm } from '../../hooks/useFormSchema';
+import InputField from '../InputField';
+import useLinksMutations from '../../hooks/useLinksMutations';
 
-interface ICard {
+interface ICardProps {
     id: string,
     indexLink: number;
     removeCard: () => void;
-    dataLink: ILink,
+    dataLink: ILink
 };
 
 const Card = ({
@@ -20,22 +21,29 @@ const Card = ({
     dataLink,
     removeCard,
     id
-}: ICard) => {
+}: ICardProps) => {
     const {
-        errors,
+        addLink,
+        updateLink,
+        removeLink,
+    } = useLinksMutations();
+    const {
+        control,
         handleSubmit,
-        register,
-        onSubmit,
-        setValue,
-        removeLink
-    } = useLinkMutationsAndValidation();
-
+        formState: { errors },
+        setValue
+    } = useCustomForm<CardFormData>(cardFormSchema);
     useEffect(() => {
         setValue('platform', dataLink?.platform);
         setValue('link', dataLink?.link);
-        
     }, [dataLink, setValue]);
-
+    const onSubmit = (data: CardFormData, id: string) => {
+        if (id?.length > 0) {
+            updateLink({ data, id });
+        } else {
+            addLink(data);
+        }
+    };
 
     return (
         <div className={styles.container_card}>
@@ -55,20 +63,32 @@ const Card = ({
             <form
                 onSubmit={handleSubmit((data) => onSubmit(data, id))}
                 className={styles.form}
+                noValidate
             >
-                <ListDropDown
+                <Controller
                     name="platform"
-                    register={register}
-                    error={!!errors?.platform}
-                    errorMessage={errors?.platform?.message}
+                    control={control}
+                    render={({ field }) => (
+                        <ListDropDown
+                            field={field}
+                            error={!!errors?.platform}
+                            errorMessage={errors?.platform?.message}
+                        />
+                    )}
                 />
-                <InputField
+                <Controller
                     name="link"
-                    placeholder="Insira seu Link"
-                    register={register}
-                    error={!!errors?.link}
-                    errorMessage={errors?.link?.message}
+                    control={control}
+                    render={({ field }) => (
+                        <InputField
+                            placeholder="Insira seu Link"
+                            field={field}
+                            error={!!errors?.link}
+                            errorMessage={errors?.link?.message}
+                        />
+                    )}
                 />
+
                 <Button>
                     {
                         dataLink && (dataLink.link || dataLink.platform) ? "atualizar" : "salvar"
