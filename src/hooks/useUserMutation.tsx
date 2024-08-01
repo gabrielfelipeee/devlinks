@@ -1,15 +1,10 @@
-
-import { useUsers } from "../context/UsersContext"
 import apiClient from "../services/axiosInstance"
 import { useMutation, useQueryClient } from "react-query"
 import { ProfileFormData } from "./useFormSchema";
 
 const useUserMutation = () => {
     const token = sessionStorage.getItem("token");
-    const { users } = useUsers();
-
     const userIdAuthenticated = sessionStorage.getItem("userIdAuthenticated")!;
-    const userAuthenticated = users?.find(item => item.id === userIdAuthenticated);
 
     const queryClient = useQueryClient();
     const mutationUpdateProfile = useMutation(
@@ -21,6 +16,7 @@ const useUserMutation = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['all-users']);
+                queryClient.invalidateQueries(['user-authenticated']);
             },
             onError: (error) => {
                 console.log("Erro ao atualizar usuário", error);
@@ -29,7 +25,6 @@ const useUserMutation = () => {
     );
 
     return {
-        userAuthenticated,
         token,
         updateProfile: mutationUpdateProfile.mutate,
     }

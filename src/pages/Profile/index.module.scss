@@ -1,50 +1,74 @@
 .container_profile {
+    width: 100%;
     max-width: 1400px;
-    margin: 2rem auto;
-    border-radius: .5rem;
-    background-color: var(--primary-color);
-    padding: 1rem .5rem;
-    color: var(--font-color);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5rem;
 
-    .box_info {
-        .h1 {
-            font-weight: 600;
-            font-size: 2rem;
-        }
+    .box_profile {
+        max-width: 1400px;
+        border-radius: .5rem;
+        background-color: var(--primary-color);
+        padding: 1rem .5rem;
+        color: var(--font-color);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
 
-        .text {
-            font-size: .9rem;
-            display: block;
-            margin-bottom: 2rem;
-        }
-    }
+        .box_info {
+            .h1 {
+                font-weight: 600;
+                font-size: 2rem;
+            }
 
-    .form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-
-        .preview {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1rem;
-
-            .img {
-                width: 200px;
-                height: 200px;
-                border-radius: 50%;
-                box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
+            .text {
+                font-size: .9rem;
+                display: block;
+                margin-bottom: 2rem;
             }
         }
 
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .preview_img {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 1rem;
+
+                .img {
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 50%;
+                    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
+                }
+            }
+
+        }
+    }
+
+    .preview {
+        display: none;
     }
 }
 
 @media screen and (min-width: 768px) {
     .container_profile {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 1rem;
         width: 95%;
-        padding: 1rem 2rem 2rem 2rem;
+
+        .box_profile {
+            width: 60%;
+            padding: 1rem 2rem 2rem 2rem;
+        }
+
+        .preview {
+            display: block;
+            width: 40%;
+        }
     }
 }

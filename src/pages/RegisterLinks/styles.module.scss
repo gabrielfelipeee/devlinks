@@ -1,0 +1,97 @@
+@import '../../styles/mixins/animate_button.scss';
+
+.container_register_links {
+    width: 100%;
+    max-width: 1400px;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5rem;
+
+    .box_links {
+        background-color: var(--primary-color);
+        color: var(--font-color);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+
+        .box_add_links {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            border-bottom: 1px solid var(--secondary-color);
+
+            .h1 {
+                font-weight: 600;
+                font-size: 2rem;
+                color: var(--secondary-color);
+            }
+
+            .text {
+                font-size: .9rem;
+                display: block;
+                margin-bottom: 2rem;
+            }
+
+            .btn_add {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: .3rem;
+                width: 100%;
+                margin-bottom: 2rem;
+                border: 2px solid var(--secondary-color);
+                border-radius: .4rem;
+                padding: .5rem 0;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 1rem;
+                background-color: inherit;
+                color: var(--secondary-color);
+                transition: background-color 0.5s, color 0.5s, transform .5s;
+
+                &:hover {
+                    @include animate_button(var(--secondary-color), var(--primary-color));
+                }
+            }
+        }
+
+        .box_cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            height: 500px;
+            flex: 1;
+            overflow-y: auto;
+        }
+    }
+
+    .preview {
+        display: none;
+    }
+}
+
+
+@media screen and (min-width: 768px) {
+    .container_register_links {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 1rem;
+        width: 95%;
+
+        .box_links {
+            padding: 1rem 2rem 2rem 2rem;
+            width: 60%;
+            border-radius: .5rem;
+            width: 60%;
+
+            .box_cards {
+                padding: 0;
+            }
+        }
+
+        .preview {
+            display: block;
+            width: 40%;
+        }
+    }
+}

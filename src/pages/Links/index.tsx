@@ -1,47 +1,33 @@
+import { useLocation } from 'react-router-dom';
 import styles from './styles.module.scss';
-import Card from '../../componenets/Card';
-import { FiPlus } from "react-icons/fi";
-import { useEffect, useState } from 'react';
+import { useUsers } from '../../context/UsersContext';
 import { useLinks } from '../../context/LinksContext';
+import useProfileForm from '../../hooks/useProfileForm';
+import CardViewLink from '../../componenets/CardViewLink';
 
 const Links = () => {
-    const { linksUserAuthenticated = [] } = useLinks();
-    const [counterLinks, setCounterLinks] = useState<number[]>([]);
-    useEffect(() => {
-        if (linksUserAuthenticated?.length > 0) {
-            setCounterLinks(linksUserAuthenticated.map((_, index) => index));
-        }
-    }, [linksUserAuthenticated]);
+    const { pathname } = useLocation();
+    const { users, } = useUsers();
+    const { imagePreview } = useProfileForm();
+    const { allLinks } = useLinks();
 
-    const addCard = () => {
-        setCounterLinks(prev => [...prev, prev.length]);
-    };
-    const removeCard = () => {
-        setCounterLinks(prev => prev.slice(0, -1));
-    };
+    const currentUser = users?.find(user => user.id === pathname.substring(1));
+    const linksCurrentUser = allLinks?.filter(link => link.userId === pathname.substring(1));
 
     return (
-        <div className={styles.container_link}>
-            <h1 className={styles.h1}>Adicione seus links</h1>
-            <span className={styles.text}>Adicione seus links abaixo e compartilhe todos os seus perfis com o mundo!</span>
-            <button
-                className={styles.btn_add}
-                onClick={addCard}
-            >
-                <FiPlus />
-                Adicionar novo link
-            </button>
-
-            <div className={styles.box_cards}>
+        <div className={styles.container_links}>
+            <div className={styles.box_info}>
+                <img src={imagePreview} alt="foto de perfil" className={styles.img} />
+                <h2 className={styles.h2}>{currentUser?.name}</h2>
+                <span className={styles.email}>{currentUser?.email}</span>
+            </div>
+            <div className={styles.cards}>
                 {
-                    counterLinks.map((item, index) => (
-                        (item < 5) &&
-                        <Card
-                            key={index}
-                            id={linksUserAuthenticated[index]?.id!}
-                            indexLink={item + 1}
-                            removeCard={removeCard}
-                            dataLink={linksUserAuthenticated[index]}
+                    linksCurrentUser?.map(link => (
+                        <CardViewLink
+                            key={link.id}
+                            link={link.link}
+                            platform={link.platform}
                         />
                     ))
                 }

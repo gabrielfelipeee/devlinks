@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import defaultAvatar from '../assets/user.png';
 import { ProfileFormData, profileFormSchema, useCustomForm } from "./useFormSchema";
-import useUserMutation from "./useUserMutation";
+import { useUsers } from "../context/UsersContext";
 
 const useProfileForm = () => {
     const [imagePreview, setImagePreview] = useState<string>(defaultAvatar);
-    const { token, userAuthenticated } = useUserMutation();
+    const token = sessionStorage.getItem("token");
+    const { userAuthenticated } = useUsers();
 
     const {
         control,

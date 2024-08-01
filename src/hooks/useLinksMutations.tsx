@@ -1,6 +1,7 @@
 import apiClient from "../services/axiosInstance"
-import { useMutation, useQueryClient } from "react-query"
+import { isError, useMutation, useQueryClient } from "react-query"
 import { CardFormData } from "./useFormSchema"
+import ModalMessage from "../componenets/ModalMessage";
 
 // Adicionar um link
 const addLink = async (data: CardFormData, token: string) => {
@@ -74,14 +75,14 @@ const useLinksMutations = () => {
 
     return {
         addLink: mutationAddLink.mutate,
+        isSuccessAddLink: mutationAddLink.isSuccess,
+        isErrorAddLink: mutationAddLink.isError,
         updateLink: mutationUpdateLink.mutate,
+        isSuccessUpdateLink: mutationUpdateLink.isSuccess,
+        isErrorUpdateLink: mutationUpdateLink.isError,
         removeLink: mutationRemoveLink.mutate,
-        isLoadingAdd: mutationAddLink.isLoading,
-        errorAdd: mutationAddLink.error,
-        isLoadingUpdate: mutationUpdateLink.isLoading,
-        errorUpdate: mutationUpdateLink.error,
-        isLoadingRemove: mutationRemoveLink.isLoading,
-        errorRemove: mutationRemoveLink.error
+        isSuccessRemoveLink: mutationRemoveLink.isSuccess,
+        isErrorRemoveLink: mutationRemoveLink.isError,
     }
 }
 export default useLinksMutations;

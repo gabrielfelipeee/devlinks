@@ -2,18 +2,24 @@ import { createContext, ReactNode, useContext } from "react";
 import { useQuery } from "react-query";
 import apiClient from "../services/axiosInstance";
 import { IUser } from "../interfaces/IUser";
-import { jwtDecode } from "jwt-decode";
+
 import { IToken } from "../interfaces/IToken";
+import { jwtDecode } from "jwt-decode";
 
 export interface IUsersContext {
     users: IUser[],
-    isLoading: boolean,
-    error: any,
-    userIdAuthenticated: string | null
+    isLoadingUsers: boolean,
+    errorUsers: any,
+    userAuthenticated: IUser | undefined,
+    userIdAuthenticated: string | null,
+    isLoadingUserAuthenticated: boolean,
+    errorUserAuthenticated: any
 }
+
 interface IUsersProviderProps {
     children: ReactNode;
 }
+
 export const UsersContext = createContext<IUsersContext | undefined>(undefined);
 UsersContext.displayName = "Users";
 
@@ -28,22 +34,47 @@ const fetchAllUsers = async () => {
     return response.data;
 };
 
+// Busca o usuário autenticado
+const fetchUserAuthenticated = async (token: string, id: string) => {
+    const response = await apiClient.get(`/users/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    });
+    return response.data;
+};
+
 const UsersProvider = ({ children }: IUsersProviderProps) => {
     const token = sessionStorage.getItem("token");
-
     const userIdAuthenticated = token ? jwtDecode<IToken>(token)?.nameid : null;
+
     const {
         data: users,
-        isLoading,
-        error
+        isLoading: isLoadingUsers,
+        error: errorUsers,
     } = useQuery('all-users', fetchAllUsers);
+
+    const {
+        data: userAuthenticated,
+        isLoading: isLoadingUserAuthenticated,
+        error: errorUserAuthenticated
+    } = useQuery({
+        queryKey: ['user-authenticated'],
+        queryFn: () => fetchUserAuthenticated(token!, userIdAuthenticated!),
+        enabled: !!token && !!userIdAuthenticated
+    });
 
     return (
         <UsersContext.Provider value={{
             users,
-            isLoading,
-            error,
-            userIdAuthenticated
+            isLoadingUsers,
+            errorUsers,
+            userIdAuthenticated,
+            userAuthenticated,
+            isLoadingUserAuthenticated,
+            errorUserAuthenticated
         }}>
             {children}
         </UsersContext.Provider>
@@ -57,4 +88,5 @@ export const useUsers = () => {
     }
     return context;
 };
+
 export default UsersProvider;

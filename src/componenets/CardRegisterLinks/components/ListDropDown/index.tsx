@@ -1,6 +1,6 @@
 import styles from './styles.module.scss';
 import IInputField from "../../../../interfaces/IInputField";
-import { FaGithub, FaFacebook, FaYoutube, FaInstagram, FaLinkedin } from "react-icons/fa";
+import platforms from '../../../../data/platforms';
 
 const ListDropDown = (
     {
@@ -9,13 +9,8 @@ const ListDropDown = (
         error
     }: IInputField
 ) => {
-    const platforms = [
-        { icon: FaYoutube, name: "YouTube" },
-        { icon: FaFacebook, name: "Facebook" },
-        { icon: FaGithub, name: "GitHub" },
-        { icon: FaInstagram, name: "Instagram" },
-        { icon: FaLinkedin, name: "Linkedin" }
-    ];
+
+    
     const SelectedIcon = platforms.find(platform => platform.name === field.value)?.icon;
 
     return (

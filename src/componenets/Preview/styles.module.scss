@@ -1,0 +1,62 @@
+@keyframes shimmer {
+    0% {
+        background-position: -100% 0;
+    }
+
+    100% {
+        background-position: 100% 0;
+    }
+}
+
+.container_preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('../../assets/phone.svg');
+    background-size: 280px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: .5rem;
+    background-color: var(--primary-color);
+    padding: 1rem;
+    color: var(--font-color);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+    height: 800px;
+
+    .box_info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 9rem;
+        width: 240px;
+
+        .h2 {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: .5rem;
+            position: relative;
+        }
+
+        .email {
+            margin: .2rem 0 1rem 0;
+            font-size: .9rem;
+            position: relative;
+        }
+
+        .img {
+            width: 110px;
+            border-radius: 50%;
+        }
+    }
+
+    .box_cards {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 220px;
+        gap: 1rem;
+        margin-top: 1rem;
+        pointer-events: none;
+    }
+}

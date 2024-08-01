@@ -1,74 +1,55 @@
 @keyframes modal {
     0% {
-        right: -250px;
+        top: -280px;
+
     }
 
-    15% {
-        right: 7%;
+    10% {
+        top: 100px;
+
     }
 
     55% {
-        right: 7%;
+        top: 100px;
+
     }
 
     100% {
-        right: -250px;
+        top: -280px;
     }
 }
-
-@keyframes border-animate {
-    0% {
-        width: 100%;
-    }
-
-    15% {
-        width: 100%;
-    }
-
-    100% {
-        width: 0;
-    }
-}
-
 
 .container_modal {
     display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 5rem;
-    right: -250px;
-    z-index: 10;
-    font-weight: 700;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
     color: var(--primary-color);
-    width: 250px;
-    border-radius: .2rem;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
-    padding-bottom: .5rem;
-    background-color: #fff;
-    animation: modal 5s ease-in-out;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 1.5rem 1rem;
+    border-radius: .3rem;
 
-    .title {
-        background-color: rgba(255, 0, 0, 0.2);
-        color: red;
-        padding: .8rem;
-        border-radius: .2rem;
+    position: fixed;
+    left: 50%;
+    top: -280px;
+    transform: translateX(-50%);
+
+    animation: modal 1.5s ease-in-out;
+
+
+    &.error {
+        background-color: var(--color-error);
     }
 
-    .message {
-        margin-top: .5rem;
-        padding: .5rem;
-        border-radius: .2rem;
-        color: #555555;
+    &.success {
+        background-color: var(--color-success);
+    }
+    &.alert {
+        background-color: var(--color-alert);
     }
 
-    &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 3px;
-        width: 0;
-        background-color: red;
-        animation: border-animate 2.5s linear;
+    .icon {
+        font-size: 30px;
     }
 }

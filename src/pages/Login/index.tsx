@@ -23,7 +23,9 @@ const Login = () => {
 
     return (
         <>
-            {showModal && <ModalMessage message={loginData?.message!} />}
+            {
+                showModal && <ModalMessage message={loginData?.message!} typeMenssage='error' />
+            }
             <section className={styles.container_login_register}>
                 <div className={styles.box_login_register}>
                     <h2>Cadastre-se</h2>

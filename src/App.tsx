@@ -3,9 +3,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Header from "./componenets/Header";
 import PrivateRoute from "./componenets/PrivateRoute";
-import Links from "./pages/Links";
+import RegisterLinks from "./pages/RegisterLinks";
 import Profile from "./pages/Profile";
-import Preview from "./pages/Preview";
+import Links from "./pages/Links";
 import UsersProvider from "./context/UsersContext";
 import LinksProvider from "./context/LinksContext";
 
@@ -22,14 +22,14 @@ function App() {
               <Route path='/cadastro' element={<Register />} />
 
               <Route path='/' element={<PrivateRoute />}>
-                <Route index element={<Links />} />
+                <Route index element={<RegisterLinks />} />
               </Route>
 
               <Route path='/perfil' element={<PrivateRoute />}>
                 <Route index element={<Profile />} />
               </Route>
 
-              <Route path='/:id' element={<Preview />} />
+              <Route path='/:id' element={<Links />} />
             </Routes>
           </main>
 
