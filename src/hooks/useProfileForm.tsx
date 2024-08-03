@@ -19,6 +19,7 @@ const useProfileForm = () => {
     const avatarWatch = watch('avatar');
 
     useEffect(() => {
+        setValue('slug', userAuthenticated?.slug!)
         setValue('avatar', userAuthenticated?.avatar!);
         setValue('name', userAuthenticated?.name!);
         setValue('email', userAuthenticated?.email!);

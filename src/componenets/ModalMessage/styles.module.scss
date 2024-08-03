@@ -36,6 +36,7 @@
     transform: translateX(-50%);
 
     animation: modal 1.5s ease-in-out;
+    z-index: 100;
 
 
     &.error {

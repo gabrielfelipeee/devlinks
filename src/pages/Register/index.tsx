@@ -6,9 +6,10 @@ import { RegisterFormData, registerFormSchema, useCustomForm } from '../../hooks
 import useRegister from '../../hooks/useRegister';
 import { Controller } from 'react-hook-form';
 import InputFieldPassword from '../../componenets/InputFieldPassword';
+import ModalMessage from '../../componenets/ModalMessage';
 
 const Register = () => {
-    const { registerUser } = useRegister();
+    const { registerUser, isSuccessRegister } = useRegister();
     const {
         control,
         handleSubmit,
@@ -16,59 +17,64 @@ const Register = () => {
     } = useCustomForm<RegisterFormData>(registerFormSchema);
 
     return (
-        <section className={styles.container_login_register}>
-            <div className={styles.box_login_register}>
-                <h2>Bem-vindo de volta</h2>
-                <p>Acesse sua conta agora</p>
-                <Link to='/login'>Entrar</Link>
-            </div>
-            <div className={styles.box_form}>
-                <h1>Crie sua conta</h1>
+        <>
+            {
+                isSuccessRegister && <ModalMessage message="Usuário cadastrado com sucesso" typeMessage='success' />
+            }
+            <section className={styles.container_login_register}>
+                <div className={styles.box_login_register}>
+                    <h2>Já tem uma conta?</h2>
+                    <p>Acesse sua conta agora</p>
+                    <Link to='/login'>Entrar</Link>
+                </div>
+                <div className={styles.box_form}>
+                    <h1>Crie sua conta</h1>
 
-                <form
-                    noValidate
-                    onSubmit={handleSubmit((data) => registerUser(data))}
-                >
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <InputField
-                                placeholder="nome"
-                                field={field}
-                                error={!!errors?.name}
-                                errorMessage={errors?.name?.message}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                            <InputField
-                                placeholder="email"
-                                field={field}
-                                error={!!errors?.email}
-                                errorMessage={errors?.email?.message}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <InputFieldPassword
-                                placeholder="senha"
-                                field={field}
-                                error={!!errors?.password}
-                                errorMessage={errors?.password?.message}
-                            />
-                        )}
-                    />
-                    <Button>Cadastrar</Button>
-                </form>
-            </div>
-        </section>
+                    <form
+                        noValidate
+                        onSubmit={handleSubmit((data) => registerUser(data))}
+                    >
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    placeholder="nome"
+                                    field={field}
+                                    error={!!errors?.name}
+                                    errorMessage={errors?.name?.message}
+                                />
+                            )}
+                        />
+                        <Controller
+                            name="email"
+                            control={control}
+                            render={({ field }) => (
+                                <InputField
+                                    placeholder="email"
+                                    field={field}
+                                    error={!!errors?.email}
+                                    errorMessage={errors?.email?.message}
+                                />
+                            )}
+                        />
+                        <Controller
+                            name="password"
+                            control={control}
+                            render={({ field }) => (
+                                <InputFieldPassword
+                                    placeholder="senha"
+                                    field={field}
+                                    error={!!errors?.password}
+                                    errorMessage={errors?.password?.message}
+                                />
+                            )}
+                        />
+                        <Button>Cadastrar</Button>
+                    </form>
+                </div>
+            </section>
+        </>
 
     )
 }

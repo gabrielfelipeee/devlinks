@@ -16,7 +16,7 @@
     margin: 0 auto;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: .5s;
+    transition: color .5s, background-color .5s, transform .5s;
 
     &:hover {
         @include animate_button(var(--secondary-color), var(--primary-color));

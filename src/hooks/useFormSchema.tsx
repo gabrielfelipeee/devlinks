@@ -60,7 +60,8 @@ export const profileFormSchema = baseFormSchema
         password: true // Remove o campo password
     })
     .extend({
-        avatar: z.string().url("Insira uma URL válida") // Adiciona o campo de avatar
+        avatar: z.string().url("Insira uma URL válida"), // Adiciona o campo de avatar
+        slug: z.string().min(1, "Insira um slug válido")
     });
 
 

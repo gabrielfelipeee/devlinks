@@ -27,6 +27,8 @@ const useUserMutation = () => {
     return {
         token,
         updateProfile: mutationUpdateProfile.mutate,
+        isError: mutationUpdateProfile.isError,
+        isSuccess: mutationUpdateProfile.isSuccess
     }
 }
 export default useUserMutation;

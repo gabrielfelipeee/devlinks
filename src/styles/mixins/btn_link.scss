@@ -10,7 +10,7 @@
     border-radius: .5rem;
     padding: .2rem 2rem;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    transition: .5s;
+    transition: color .5s, background-color .5s, transform .5s;
 
     &:hover {
         @include animate_button(var(--primary-color), var(--secondary-color));

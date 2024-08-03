@@ -1,42 +1,72 @@
+@import '../../styles/mixins/btn_link.scss';
+
 .container_links {
-    max-width: 500px;
-    margin: 2rem auto;
-    border-radius: .5rem;
-    background-color: var(--primary-color);
-    padding: 1rem;
-    color: var(--font-color);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    max-width: 1400px;
+    margin: 0 auto;
 
-    .box_info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
-        }
-        .h2 {
-            margin-top: .3rem;
-        }
-        .email {
-            margin-bottom: 1rem;
+    .box_links {
+        width: 100%;
+        max-width: 500px;
+        margin: 2rem auto;
+        border-radius: .5rem;
+        background-color: var(--primary-color);
+        padding: 1rem;
+        color: var(--font-color);
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+
+        .box_info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .img {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
+            }
+
+            .h2 {
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin-top: 1rem;
+            }
+
+            .email {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
         }
 
+        .cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
     }
 
-    .cards {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+    .to_register {
+        text-decoration: none;
+        color: var(--font-color);
+        text-align: center;
+        margin-top: 1rem;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
-
 @media screen and (min-width: 768px) {
     .container_links {
-        padding: 1rem 2rem 2rem 2rem;
+        width: 95%;
+
+        .box_links {
+            padding: 2rem;
+        }
     }
 }

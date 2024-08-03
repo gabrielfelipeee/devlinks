@@ -35,8 +35,8 @@ const fetchAllUsers = async () => {
 };
 
 // Busca o usuário autenticado
-const fetchUserAuthenticated = async (token: string, id: string) => {
-    const response = await apiClient.get(`/users/${id}`, {
+const fetchUserAuthenticated = async (token: string) => {
+    const response = await apiClient.get('users/authenticated', {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
@@ -60,11 +60,18 @@ const UsersProvider = ({ children }: IUsersProviderProps) => {
         data: userAuthenticated,
         isLoading: isLoadingUserAuthenticated,
         error: errorUserAuthenticated
-    } = useQuery({
-        queryKey: ['user-authenticated'],
-        queryFn: () => fetchUserAuthenticated(token!, userIdAuthenticated!),
-        enabled: !!token && !!userIdAuthenticated
-    });
+    } = useQuery(
+        ['user-authenticated', token],
+        () => {
+            if (token) {
+                return fetchUserAuthenticated(token);
+            }
+        },
+        {
+            enabled: !!token,
+            keepPreviousData: true
+        }
+    );
 
     return (
         <UsersContext.Provider value={{

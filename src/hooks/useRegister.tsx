@@ -17,7 +17,9 @@ const useRegister = () => {
         {
             onSuccess: () => {
                 queryClient.invalidateQueries(['all-users']);
-                navigate('/login');
+                setTimeout(() => {
+                    navigate('/login');
+                }, 1500);
             },
             onError: (error) => {
                 console.error("Erro ao cadastrar usuário", error);
@@ -26,7 +28,8 @@ const useRegister = () => {
     );
 
     return {
-        registerUser: mutationRegister.mutate
+        registerUser: mutationRegister.mutate,
+        isSuccessRegister: mutationRegister.isSuccess
     }
 };
 export default useRegister;

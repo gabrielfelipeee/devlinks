@@ -2,7 +2,7 @@ import styles from './styles.module.scss';
 import { IoClose } from "react-icons/io5";
 import Button from '../Button';
 import ListDropDown from './components/ListDropDown';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import ILink from '../../interfaces/ILink';
 import { Controller } from 'react-hook-form';
 import { CardFormData, cardFormSchema, useCustomForm } from '../../hooks/useFormSchema';
@@ -16,10 +16,6 @@ interface ICardProps {
     removeCard: () => void;
     dataLink: ILink
 };
-interface IMessage {
-    message: string;
-    typeMessage: 'success' | 'alert' | 'error' | null;
-}
 
 const CardRegisterLinks = ({
     indexLink,
@@ -99,10 +95,9 @@ const CardRegisterLinks = ({
                             />
                         )}
                     />
-
                     <Button>
                         {
-                            dataLink && (dataLink.link || dataLink.platform) ? "atualizar" : "salvar"
+                            dataLink ? "atualizar" : "adicionar"
                         }
                     </Button>
                 </form>

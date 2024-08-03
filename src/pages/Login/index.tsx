@@ -24,16 +24,16 @@ const Login = () => {
     return (
         <>
             {
-                showModal && <ModalMessage message={loginData?.message!} typeMenssage='error' />
+                showModal && <ModalMessage message={loginData?.message!} typeMessage='error' />
             }
             <section className={styles.container_login_register}>
                 <div className={styles.box_login_register}>
-                    <h2>Cadastre-se</h2>
+                    <h2>Ainda não tem conta?</h2>
                     <p>Cadastre-se agora</p>
-                    <Link to="/cadastro">Cadastrar</Link>
+                    <Link to="/cadastro">Criar conta</Link>
                 </div>
                 <div className={styles.box_form}>
-                    <h1>Entre na sua conta </h1>
+                    <h1>Entre na sua conta</h1>
                     <form
                         noValidate
                         onSubmit={handleSubmit((data) => login(data))}
@@ -64,9 +64,7 @@ const Login = () => {
                         />
                         <Button>Entrar</Button>
                     </form>
-
                 </div>
-
             </section>
         </>
     )

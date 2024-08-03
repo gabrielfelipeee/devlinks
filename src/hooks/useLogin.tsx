@@ -35,11 +35,12 @@ const useLogin = () => {
         {
             onSuccess: (response) => {
                 const responseData = response.data;
-                queryClient.invalidateQueries(['all-links']);
                 if (responseData.authenticated) {
                     sessionStorage.setItem("token", responseData.acessToken);
                     const decodedToken = jwtDecode<IToken>(responseData.acessToken!);
                     sessionStorage.setItem("userIdAuthenticated", decodedToken.nameid);
+                    queryClient.invalidateQueries(['all-links']);
+                    queryClient.refetchQueries('user-authenticated');
                     navigate('/');
                 };
                 setLoginData(responseData);
@@ -61,7 +62,7 @@ const useLogin = () => {
         const timer = setTimeout(() => {
             setLoginData(undefined);
             setShowModal(false);
-        }, 5000);
+        }, 1500);
         return () => clearTimeout(timer);
     }, [loginData, setLoginData]);
 

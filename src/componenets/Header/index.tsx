@@ -5,16 +5,17 @@ import { CgProfile } from "react-icons/cg";
 import { FaEye } from "react-icons/fa";
 import ToggleTheme from "../ToggleTheme";
 import { Link, useLocation } from 'react-router-dom';
+import { useUsers } from '../../context/UsersContext';
 
 const Header = () => {
     const { pathname } = useLocation();
-    const userIdAuthenticated = sessionStorage.getItem("userIdAuthenticated");
+    const {userAuthenticated} = useUsers();
 
     const token = sessionStorage.getItem("token");
     const navLinks = [
         { to: '/', icon: FaLink, text: 'Links' },
-        { to: '/perfil', icon: CgProfile, text: 'Profile' },
-        { to: `/${userIdAuthenticated}`, icon: FaEye, text: 'Preview' }
+        { to: '/perfil', icon: CgProfile, text: 'Perfil' },
+        { to: `/${userAuthenticated?.slug || userAuthenticated?.id}`, icon: FaEye, text: 'Preview' }
     ];
     const isNavVisible = !['/login', '/cadastro'].includes(pathname);
 
