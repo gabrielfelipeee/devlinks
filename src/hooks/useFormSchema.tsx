@@ -54,21 +54,21 @@ export const cardFormSchema = z.object({
 
 
 
+
 // Esquema (validação) do formulário de atualização do usuário
 export const profileFormSchema = baseFormSchema
     .omit({
         password: true // Remove o campo password
     })
     .extend({
-        avatar: z.string().url("Insira uma URL válida"), // Adiciona o campo de avatar
-        slug: z.string().min(1, "Insira um slug válido")
+        avatar: z.string().url("Insira uma URL válida"),
+        slug: z.string().min(1, "Insira seu slug").transform(slug => slug.toLocaleLowerCase())
     });
-
-
 
 export function useCustomForm<T extends FieldValues>(schema: ZodType<T, any, any>): UseFormReturn<T> {
     return useForm<T>({
         resolver: zodResolver(schema),
+        mode: 'onChange'
     });
 };
 

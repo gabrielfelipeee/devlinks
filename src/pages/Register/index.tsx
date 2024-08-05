@@ -7,19 +7,45 @@ import useRegister from '../../hooks/useRegister';
 import { Controller } from 'react-hook-form';
 import InputFieldPassword from '../../componenets/InputFieldPassword';
 import ModalMessage from '../../componenets/ModalMessage';
+import { useEffect, useState } from 'react';
 
 const Register = () => {
-    const { registerUser, isSuccessRegister } = useRegister();
+    const {
+        registerUser,
+        isSuccess,
+        isError,
+        error
+    } = useRegister();
     const {
         control,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        watch
     } = useCustomForm<RegisterFormData>(registerFormSchema);
+    const watchEmail = watch('email');
+
+    // Mensagem de erro (se já existir uma conta com o email)
+    const [customErrorMessageEmail, setCustomErrorMessageEmail] = useState<string | null>(null);
+    useEffect(() => {
+        if (error?.response?.status === 409) {
+            setCustomErrorMessageEmail(error?.response?.data);
+        }
+    }, [error]);
+    useEffect(() => {
+        if (customErrorMessageEmail) {
+            setCustomErrorMessageEmail(null);
+        }
+    }, [watchEmail]);
 
     return (
         <>
             {
-                isSuccessRegister && <ModalMessage message="Usuário cadastrado com sucesso" typeMessage='success' />
+                isSuccess && <ModalMessage message="Usuário cadastrado com sucesso" typeMessage='success' />
+            }
+            {
+                isError && (error?.response?.status === 409)
+                    ? <ModalMessage message={error.response.data} typeMessage='alert' />
+                    : isError && <ModalMessage message="Ocorreu um erro ao cadastrar usuário" typeMessage='error' />
             }
             <section className={styles.container_login_register}>
                 <div className={styles.box_login_register}>
@@ -37,6 +63,8 @@ const Register = () => {
                         <Controller
                             name="name"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
                                     placeholder="nome"
@@ -49,18 +77,22 @@ const Register = () => {
                         <Controller
                             name="email"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
                                     placeholder="email"
                                     field={field}
-                                    error={!!errors?.email}
-                                    errorMessage={errors?.email?.message}
+                                    error={!!errors?.email || !!customErrorMessageEmail}
+                                    errorMessage={errors?.email?.message || customErrorMessageEmail!}
                                 />
                             )}
                         />
                         <Controller
                             name="password"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputFieldPassword
                                     placeholder="senha"

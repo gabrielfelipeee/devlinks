@@ -3,27 +3,52 @@ import Button from '../../componenets/Button';
 import InputField from '../../componenets/InputField';
 import styles from './index.module.scss';
 import useUserMutation from '../../hooks/useUserMutation';
-import useProfileForm from '../../hooks/useProfileForm';
+import useProfile from '../../hooks/useProfile';
 import Preview from '../../componenets/Preview';
 import ModalMessage from '../../componenets/ModalMessage';
+import { useEffect, useState } from 'react';
+
 
 const Profile = () => {
+    const [customErrorMessage, setCustomErrorMessage] = useState({
+        email: "",
+        slug: ""
+    });
     const {
         updateProfile,
-        isError,
-        isSuccess
+        isSuccess,
+        error
     } = useUserMutation();
     const {
         control,
         errors,
         handleSubmit,
-        imagePreview
-    } = useProfileForm();
+        imagePreview,
+        disabledButton,
+        slugWatch,
+        emailWatch
+    } = useProfile();
+
+    useEffect(() => {
+        if (error?.response?.status === 409) {
+            const message = error.response.data;
+            if (message.includes("SLUG")) {
+                setCustomErrorMessage({ slug: message, email: "" })
+            } else if (message.includes("EMAIL")) {
+                setCustomErrorMessage({ slug: "", email: message })
+            }
+        };
+    }, [error]);
+    useEffect(() => {
+        setCustomErrorMessage({ email: "", slug: "" });
+    }, [emailWatch, slugWatch]);
+
+
 
     return (
         <>
             {
-                isError && <ModalMessage message="Esse SLUG já existe" typeMessage='error' />
+                (error?.response?.status === 409) && <ModalMessage message={error?.response?.data} typeMessage='alert' />
             }
             {
                 isSuccess && <ModalMessage message="Perfil atualizado com sucesso" typeMessage='success' />
@@ -46,9 +71,11 @@ const Profile = () => {
                         <Controller
                             name="name"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
-                                    placeholder="Insira seu Link"
+                                    placeholder="insira seu nome"
                                     field={field}
                                     error={!!errors?.name}
                                     errorMessage={errors?.name?.message}
@@ -58,21 +85,25 @@ const Profile = () => {
                         <Controller
                             name="email"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
-                                    placeholder="Insira seu Link"
+                                    placeholder="insira seu email"
                                     field={field}
-                                    error={!!errors?.email}
-                                    errorMessage={errors?.email?.message}
+                                    error={!!errors?.email || !!customErrorMessage.email}
+                                    errorMessage={errors?.email?.message || customErrorMessage?.email}
                                 />
                             )}
                         />
                         <Controller
                             name="avatar"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
-                                    placeholder="Insira seu Link"
+                                    placeholder="insira sua foto de perfil"
                                     field={field}
                                     error={!!errors?.avatar}
                                     errorMessage={errors?.avatar?.message}
@@ -82,16 +113,18 @@ const Profile = () => {
                         <Controller
                             name="slug"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
-                                    placeholder="Insira seu Slug"
+                                    placeholder="crie seu slug"
                                     field={field}
-                                    error={!!errors?.slug}
-                                    errorMessage={errors?.slug?.message}
+                                    error={!!errors?.slug || !!customErrorMessage.slug}
+                                    errorMessage={errors?.slug?.message || customErrorMessage?.slug}
                                 />
                             )}
                         />
-                        <Button>Salvar</Button>
+                        <Button disabled={disabledButton}>Salvar</Button>
                     </form>
                 </div>
                 <div className={styles.preview}>

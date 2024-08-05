@@ -10,7 +10,6 @@ const ListDropDown = (
     }: IInputField
 ) => {
 
-    
     const SelectedIcon = platforms.find(platform => platform.name === field.value)?.icon;
 
     return (
@@ -19,7 +18,7 @@ const ListDropDown = (
                 {SelectedIcon && <SelectedIcon className={styles.icon} />}
                 <select
                     className={`${styles.select} ${error ? styles.input_error : ""}`}
-                   {...field}
+                    {...field}
                 >
                     <option value="" hidden>Selecione uma plataforma</option>
                     {
@@ -30,7 +29,7 @@ const ListDropDown = (
                         )}
                 </select>
             </div>
-            {error && <p className={styles.input_error_message}>{errorMessage}</p>}
+            {error && <span className={styles.input_error_message}>{errorMessage}</span>}
         </div>
     )
 };

@@ -1,6 +1,6 @@
 import { useLinks } from '../../context/LinksContext';
 import { useUsers } from '../../context/UsersContext';
-import useProfileForm from '../../hooks/useProfileForm';
+import useProfileForm from '../../hooks/useProfile';
 import CardViewLink from '../CardViewLink';
 import styles from './styles.module.scss';
 

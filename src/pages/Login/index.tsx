@@ -20,7 +20,6 @@ const Login = () => {
         formState: { errors }
     } = useCustomForm<LoginFormData>(loginFormSchema);
 
-
     return (
         <>
             {
@@ -41,6 +40,8 @@ const Login = () => {
                         <Controller
                             name="email"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputField
                                     placeholder="email"
@@ -53,6 +54,8 @@ const Login = () => {
                         <Controller
                             name="password"
                             control={control}
+                            defaultValue=""
+                            shouldUnregister={false}
                             render={({ field }) => (
                                 <InputFieldPassword
                                     placeholder="senha"

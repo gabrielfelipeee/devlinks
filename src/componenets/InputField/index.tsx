@@ -34,7 +34,7 @@ const InputField = (
                 />
                 {Icon && <Icon className={styles.icon} />}
             </label>
-            {<span className={styles.input_error_message}>{errorMessage}</span>}
+            {error && <span className={styles.input_error_message}>{errorMessage}</span>}
         </div>
     )
 };

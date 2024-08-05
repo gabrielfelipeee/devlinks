@@ -1,7 +1,8 @@
 import { createContext, ReactNode, useContext } from "react";
 import ILink from "../interfaces/ILink";
 import apiClient from "../services/axiosInstance";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { CardFormData } from "../hooks/useFormSchema";
 
 export interface ILinksContext {
     allLinks: ILink[];
@@ -10,6 +11,16 @@ export interface ILinksContext {
     isLoadingLinksUserAuthenticated: boolean;
     errorAllLinks: any;
     errorLinksUserAuthenticated: any;
+
+    addLink: (data: CardFormData) => void;
+    isSuccessAddLink: boolean;
+    isErrorAddLink: boolean;
+    updateLink: (data: { data: CardFormData; id: string }) => void;
+    isSuccessUpdateLink: boolean;
+    isErrorUpdateLink: boolean;
+    removeLink: (id: string) => void;
+    isSuccessRemoveLink: boolean;
+    isErrorRemoveLink: boolean;
 };
 interface ILinksProviderProps {
     children: ReactNode;
@@ -43,6 +54,7 @@ const fetchLinksUserAuthenticated = async (token: string) => {
 
 export const LinksProvider = ({ children }: ILinksProviderProps) => {
     const token = sessionStorage.getItem("token");
+    const queryClient = useQueryClient();
 
     const {
         data: allLinks,
@@ -60,6 +72,65 @@ export const LinksProvider = ({ children }: ILinksProviderProps) => {
         { enabled: !!token } // Só será executada se o token estiver presente
     );
 
+    // Adiciona um link
+    const mutationAddLink = useMutation(
+        (data: CardFormData) => apiClient.post('links/', data, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['authenticated-links']);
+                queryClient.invalidateQueries(['all-links']);
+            },
+            onError: () => {
+                console.error("Erro ao adicionar link");
+            }
+        }
+    );
+
+    // Atualiza um link
+    const mutationUpdateLink = useMutation(
+        ({ data, id }: { data: CardFormData; id: string }) => apiClient.put('/links/', { ...data, id }, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['authenticated-links']);
+                queryClient.invalidateQueries(['all-links']);
+            },
+            onError: () => {
+                console.error("Erro ao atualizar link");
+            }
+        }
+    );
+
+    // Remove um link
+    const mutationRemoveLink = useMutation(
+        (id: string) => apiClient.delete(`/links/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        }),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['authenticated-links']);
+                queryClient.invalidateQueries(['all-links']);
+            },
+            onError: (error) => {
+                console.error("Erro ao remover link", error);
+            }
+        }
+    );
+
     return (
         <LinksContext.Provider value={{
             allLinks,
@@ -67,7 +138,17 @@ export const LinksProvider = ({ children }: ILinksProviderProps) => {
             isLoadingAllLinks,
             isLoadingLinksUserAuthenticated,
             errorAllLinks,
-            errorLinksUserAuthenticated
+            errorLinksUserAuthenticated,
+
+            addLink: mutationAddLink.mutate,
+            isSuccessAddLink: mutationAddLink.isSuccess,
+            isErrorAddLink: mutationAddLink.isError,
+            updateLink: mutationUpdateLink.mutate,
+            isSuccessUpdateLink: mutationUpdateLink.isSuccess,
+            isErrorUpdateLink: mutationUpdateLink.isError,
+            removeLink: mutationRemoveLink.mutate,
+            isSuccessRemoveLink: mutationRemoveLink.isSuccess,
+            isErrorRemoveLink: mutationRemoveLink.isError
         }}>
             {children}
         </LinksContext.Provider>

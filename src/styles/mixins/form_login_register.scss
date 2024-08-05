@@ -1,18 +1,31 @@
 @import './btn_link.scss';
 
+@keyframes entrance-animation {
+    0% {
+        top: -100%;
+    }
+
+    100% {
+        transform: translate(-50%, -50%);
+        top: 50%;
+    }
+}
+
+
 @mixin form_login_register {
     section.container_login_register {
         width: 100%;
         display: flex;
         flex-direction: column;
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
+        color: var(--font-color);
         max-width: 900px;
         position: absolute;
-        transform: translate(-50%, -50%);
-        top: 50%;
+        transform: translateX(-50%);
         left: 50%;
+        top: -100%;
         border-radius: 1rem;
-        color: var(--font-color);
+        animation: entrance-animation .6s ease forwards;
 
         .box_login_register {
             display: flex;

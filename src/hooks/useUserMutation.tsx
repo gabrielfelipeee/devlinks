@@ -1,6 +1,7 @@
 import apiClient from "../services/axiosInstance"
 import { useMutation, useQueryClient } from "react-query"
 import { ProfileFormData } from "./useFormSchema";
+import { IErrorResponse } from "../interfaces/IErrorResponse";
 
 const useUserMutation = () => {
     const token = sessionStorage.getItem("token");
@@ -27,8 +28,8 @@ const useUserMutation = () => {
     return {
         token,
         updateProfile: mutationUpdateProfile.mutate,
-        isError: mutationUpdateProfile.isError,
-        isSuccess: mutationUpdateProfile.isSuccess
+        isSuccess: mutationUpdateProfile.isSuccess,
+        error: mutationUpdateProfile.error as IErrorResponse | null
     }
 }
 export default useUserMutation;

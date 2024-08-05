@@ -23,8 +23,22 @@
             box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--secondary-color);
 
+
+            // Estilizando o preenchimento automático (autocomplete)
+            &:-webkit-autofill {
+                // Define a cor de fundo ao preencher automaticamente
+                -webkit-box-shadow: 0 0 0px 1000px var(--primary-color) inset;
+
+                // Define a cor do texto ao preencher automaticamente
+                -webkit-text-fill-color: var(--font-color);
+            }
+
             &::placeholder {
                 text-transform: uppercase;
+            }
+
+            &:focus {
+                border-width: 2px;
             }
 
             &.input_error {
