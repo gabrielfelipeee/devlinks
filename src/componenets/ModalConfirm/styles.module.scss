@@ -1,67 +1,102 @@
-// Estilos para o modal
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+@import '../../styles/mixins/animate_button.scss';
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translate(-50%, -50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+
+.container_modal {
+  background-color: var(--bg-color);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 2rem;
+  border-radius: .5rem;
+  z-index: 100;
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.005);
+  opacity: 0;
+  animation: fadeInScale 0.3s ease forwards;
+
+  .box_head {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
+
+    .h2 {
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .icon {
+      font-size: 30px;
+      cursor: pointer;
+    }
+  }
+
+  .box_confirm {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-  
-  .modal {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    max-width: 80%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .modalBody {
-    margin: 20px 0;
-  }
-  
-  .modalFooter {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  
-    &.primary {
-      background: #007bff;
-      color: white;
+
+    .text {
+      color: var(--font-color);
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      max-width: 340px;
+      text-align: center;
     }
-  
-    &.secondary {
-      background: #6c757d;
-      color: white;
-    }
-  
-    &.danger {
-      background: #dc3545;
-      color: white;
+
+    .box_btn {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .btn_cancel,
+      .btn_delete {
+        padding: .3rem .5rem;
+        border-radius: .3rem;
+        background-color: inherit;
+        text-transform: uppercase;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--font-color);
+        margin-top: 1rem;
+      }
+
+      .btn_cancel {
+        border: 2px solid var(--color-success);
+        transition: transform .5s, background-color .5s, color .5s;
+
+        &:hover {
+          @include animate_button(var(--color-success), var(--primary-color));
+        }
+      }
+
+      .btn_delete {
+        border: 2px solid var(--color-error);
+        transition: transform .5s, background-color .5s, color .5s;
+
+        &:hover {
+          @include animate_button(var(--color-error), var(--primary-color));
+        }
+      }
     }
   }
-  
+}

@@ -8,6 +8,7 @@ import { Controller } from 'react-hook-form';
 import InputField from '../InputField';
 import { CardFormData, cardFormSchema, useCustomForm } from '../../hooks/useFormSchema';
 import { useLinks } from '../../context/LinksContext';
+import ModalConfirm from '../ModalConfirm';
 
 
 interface ICardProps {
@@ -23,6 +24,8 @@ const CardRegisterLinks = ({
     removeCard,
     id
 }: ICardProps) => {
+    const [disabled, setDisabled] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const {
         addLink,
         updateLink,
@@ -44,7 +47,7 @@ const CardRegisterLinks = ({
     const watchLink: string = watch('link');
     const watchPlatform: string = watch('platform');
 
-    const [disabled, setDisabled] = useState<boolean>(false);
+
     useEffect(() => {
         if (
             (watchLink === dataLink?.link && watchPlatform === dataLink?.platform)
@@ -63,62 +66,73 @@ const CardRegisterLinks = ({
         }
     };
 
+
+    const handleRemove = () => {
+        removeCard();
+        id && removeLink(id);
+        setIsModalOpen(false);
+    };
+
     return (
-        <div className={styles.container_card}>
-            <div className={styles.box_text}>
-                <div className={styles.index_link}>
-                    = Link #<span>{indexLink}
-                    </span>
+        <>
+            {
+                isModalOpen && <ModalConfirm
+                    title="Confirmação"
+                    message="Você realmente deseja excluir o link?"
+                    onCancel={() => setIsModalOpen(false)}
+                    onConfirm={handleRemove}
+                />
+            }
+            <div className={styles.container_card}>
+                <div className={styles.box_text}>
+                    <div className={styles.index_link}>
+                        = Link #<span>{indexLink}
+                        </span>
+                    </div>
+                    <IoClose
+                        className={styles.btn_remove}
+                        onClick={() => setIsModalOpen(true)}
+                    />
                 </div>
-                <IoClose
-                    className={styles.btn_remove}
-                    onClick={() => {
-                        let isRemove = confirm("Você deseja excluir o link?");
-                        if (isRemove) {
-                            removeCard();
-                            id && removeLink(id);
-                        };
-                    }}
-                />
+                <form
+                    onSubmit={handleSubmit((data) => onSubmit(data, id))}
+                    className={styles.form}
+                    noValidate
+                >
+                    <Controller
+                        name="platform"
+                        control={control}
+                        defaultValue=""
+                        shouldUnregister={false}
+                        render={({ field }) => (
+                            <ListDropDown
+                                field={field}
+                                error={!!errors?.platform}
+                                errorMessage={errors?.platform?.message}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name="link"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <InputField
+                                placeholder="Insira seu Link"
+                                field={field}
+                                error={!!errors?.link}
+                                errorMessage={errors?.link?.message}
+                            />
+                        )}
+                    />
+                    <Button disabled={disabled}>
+                        {
+                            dataLink ? "atualizar" : "adicionar"
+                        }
+                    </Button>
+                </form>
             </div>
-            <form
-                onSubmit={handleSubmit((data) => onSubmit(data, id))}
-                className={styles.form}
-                noValidate
-            >
-                <Controller
-                    name="platform"
-                    control={control}
-                    defaultValue=""
-                    shouldUnregister={false}
-                    render={({ field }) => (
-                        <ListDropDown
-                            field={field}
-                            error={!!errors?.platform}
-                            errorMessage={errors?.platform?.message}
-                        />
-                    )}
-                />
-                <Controller
-                    name="link"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <InputField
-                            placeholder="Insira seu Link"
-                            field={field}
-                            error={!!errors?.link}
-                            errorMessage={errors?.link?.message}
-                        />
-                    )}
-                />
-                <Button disabled={disabled}>
-                    {
-                        dataLink ? "atualizar" : "adicionar"
-                    }
-                </Button>
-            </form>
-        </div>
+        </>
     )
 };
 export default CardRegisterLinks;

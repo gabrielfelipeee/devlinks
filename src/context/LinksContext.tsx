@@ -19,8 +19,6 @@ export interface ILinksContext {
     isSuccessUpdateLink: boolean;
     isErrorUpdateLink: boolean;
     removeLink: (id: string) => void;
-    isSuccessRemoveLink: boolean;
-    isErrorRemoveLink: boolean;
 };
 interface ILinksProviderProps {
     children: ReactNode;
@@ -147,8 +145,6 @@ export const LinksProvider = ({ children }: ILinksProviderProps) => {
             isSuccessUpdateLink: mutationUpdateLink.isSuccess,
             isErrorUpdateLink: mutationUpdateLink.isError,
             removeLink: mutationRemoveLink.mutate,
-            isSuccessRemoveLink: mutationRemoveLink.isSuccess,
-            isErrorRemoveLink: mutationRemoveLink.isError
         }}>
             {children}
         </LinksContext.Provider>
