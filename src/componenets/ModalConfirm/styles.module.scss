@@ -23,6 +23,8 @@
   border-radius: .5rem;
   z-index: 100;
   box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.005);
+  min-width: 300px;
+  max-width: 400px;
   opacity: 0;
   animation: fadeInScale 0.3s ease forwards;
 
@@ -43,6 +45,10 @@
     .icon {
       font-size: 30px;
       cursor: pointer;
+      transition: transform .5s;
+      &:hover {
+        transform: translateY(-3px);
+      }
     }
   }
 
@@ -57,7 +63,6 @@
       font-size: 1.4rem;
       font-weight: 600;
       text-transform: uppercase;
-      max-width: 340px;
       text-align: center;
     }
 
@@ -78,6 +83,7 @@
         cursor: pointer;
         color: var(--font-color);
         margin-top: 1rem;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.09);
       }
 
       .btn_cancel {
