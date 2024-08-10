@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Links from "./pages/Links";
 import UsersProvider from "./context/UsersContext";
 import LinksProvider from "./context/LinksContext";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -29,13 +30,13 @@ function App() {
                 <Route index element={<Profile />} />
               </Route>
 
-              <Route path='/:id' element={<Links />} />
+              <Route path='/:slug' element={<Links />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 
         </LinksProvider>
       </UsersProvider>
-
     </BrowserRouter>
   )
 }

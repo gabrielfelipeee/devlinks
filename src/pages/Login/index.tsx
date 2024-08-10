@@ -12,7 +12,8 @@ const Login = () => {
     const {
         loginData,
         showModal,
-        login
+        login,
+        isError
     } = useLogin();
     const {
         control,
@@ -24,6 +25,9 @@ const Login = () => {
         <>
             {
                 showModal && <ModalMessage message={loginData?.message!} typeMessage='error' />
+            }
+            {
+                isError && <ModalMessage message="Erro ao fazer Login, tente novamente!" typeMessage='error' />
             }
             <section className={styles.container_login_register}>
                 <div className={styles.box_login_register}>

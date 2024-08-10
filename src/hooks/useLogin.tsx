@@ -41,7 +41,7 @@ const useLogin = () => {
         }
     );
 
-    // Mostrar modal de erro
+    // Mostrar modal de credenciais inválidas
     useEffect(() => {
         if (loginData?.authenticated === false) {
             setShowModal(true);
@@ -49,13 +49,15 @@ const useLogin = () => {
         const timer = setTimeout(() => {
             setLoginData(undefined);
             setShowModal(false);
-        }, 1500);
+        }, 2000);
+
         return () => clearTimeout(timer);
     }, [loginData, setLoginData]);
 
     return {
         loginData,
         showModal,
+        isError: mutationLogin.isError,
         login: mutationLogin.mutate
     };
 };
