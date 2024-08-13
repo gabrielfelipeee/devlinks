@@ -11,6 +11,14 @@
     }
 }
 
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+};
 
 @mixin form_login_register {
     section.container_login_register {
@@ -20,12 +28,10 @@
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.03);
         color: var(--font-color);
         max-width: 900px;
-        position: absolute;
-        transform: translateX(-50%);
-        left: 50%;
-        top: -100%;
         border-radius: 1rem;
-        animation: entrance-animation .6s ease forwards;
+        margin-top: 1rem;
+        opacity: 0;
+        animation: fade .5s ease forwards;
 
         .box_login_register {
             display: flex;
@@ -79,6 +85,12 @@
 
         section.container_login_register {
             flex-direction: row;
+            position: absolute;
+            transform: translateX(-50%);
+            left: 50%;
+            top: -100%;
+            animation: entrance-animation .5s ease forwards;
+            opacity: 1;
 
             .box_login_register {
                 border-radius: 1rem 0 0 1rem;
