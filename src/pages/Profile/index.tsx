@@ -1,24 +1,10 @@
-import { Controller } from 'react-hook-form';
-import Button from '../../componenets/Button';
-import InputField from '../../componenets/InputField';
 import styles from './index.module.scss';
-import useUserMutation from '../../hooks/useUserMutation';
-import useProfile from '../../hooks/useProfile';
-import Preview from '../../componenets/Preview';
-import ModalMessage from '../../componenets/ModalMessage';
-import { useEffect, useState } from 'react';
+import { ModalMessage, Preview, Button, InputControllerField, Loading } from '../../components';
+import { useEmailAndSlugConflictErrorHandling, useProfile, useUsersService } from '../../hooks';
+import { USER_STATUS_MESSAGES } from '../../data';
 
-
-const Profile = () => {
-    const [customErrorMessage, setCustomErrorMessage] = useState({
-        email: "",
-        slug: ""
-    });
-    const {
-        updateProfile,
-        isSuccess,
-        error
-    } = useUserMutation();
+export const Profile = () => {
+    const token = sessionStorage.getItem("userIdAuthenticated");
     const {
         control,
         errors,
@@ -28,110 +14,83 @@ const Profile = () => {
         slugWatch,
         emailWatch
     } = useProfile();
-
-    useEffect(() => {
-        if (error?.response?.status === 409) {
-            const message = error.response.data;
-            if (message.includes("SLUG")) {
-                setCustomErrorMessage({ slug: message, email: "" })
-            } else if (message.includes("EMAIL")) {
-                setCustomErrorMessage({ slug: "", email: message })
-            }
-        };
-    }, [error]);
-    useEffect(() => {
-        setCustomErrorMessage({ email: "", slug: "" });
-    }, [emailWatch, slugWatch]);
-
-
+    const {
+        updateUser,
+        errorUpdateUser,
+        isSuccessUpdateUser,
+        isErrorUpdateUser,
+        isLoadingUserAuthenticated
+    } = useUsersService();
+    const {
+        customErrorMessage
+    } = useEmailAndSlugConflictErrorHandling({
+        error: errorUpdateUser,
+        watchSlug: slugWatch,
+        watchEmail: emailWatch
+    });
 
     return (
         <>
             {
-                (error?.response?.status === 409) && <ModalMessage message={error?.response?.data} typeMessage='alert' />
+                isErrorUpdateUser && (errorUpdateUser?.response?.data?.status === 409) // Conflito
+                    ? <ModalMessage message={errorUpdateUser.response.data?.detail!} status='alert' />
+                    : isErrorUpdateUser && <ModalMessage {...USER_STATUS_MESSAGES.UPDATE_ERROR} />
             }
             {
-                isSuccess && <ModalMessage message="Perfil atualizado com sucesso" typeMessage='success' />
+                isSuccessUpdateUser && <ModalMessage {...USER_STATUS_MESSAGES.UPDATE_SUCCESS} />
             }
-            <div className={styles.container_profile}>
-                <div className={styles.box_profile}>
-                    <div className={styles.box_info}>
-                        <h1 className={styles.h1}>Detalhes do perfil</h1>
-                        <span className={styles.text}>Adicione detalhes ao seu perfil</span>
-                    </div>
-                    <form
-                        onSubmit={handleSubmit((data) => updateProfile(data))}
-                        className={styles.form}
-                    >
-                        {imagePreview && (
-                            <div className={styles.preview_img}>
-                                <img className={styles.img} src={imagePreview} alt="Foto de perfil" />
+            {
+                isLoadingUserAuthenticated
+                    ? <Loading />
+                    : <div className={styles.container_profile}>
+                        <div className={styles.box_profile}>
+                            <div className={styles.box_info}>
+                                <h1 className={styles.h1}>Detalhes do perfil</h1>
+                                <span className={styles.text}>Adicione detalhes ao seu perfil</span>
                             </div>
-                        )}
-                        <Controller
-                            name="name"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
+                            <form
+                                onSubmit={handleSubmit((data) => updateUser({ ...data, id: token! }))}
+                                className={styles.form}
+                            >
+                                {imagePreview && (
+                                    <div className={styles.preview_img}>
+                                        <img className={styles.img} src={imagePreview} alt="Foto de perfil" />
+                                    </div>
+                                )}
+                                <InputControllerField
+                                    name="name"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="insira seu nome"
-                                    field={field}
-                                    error={!!errors?.name}
-                                    errorMessage={errors?.name?.message}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
+                                <InputControllerField
+                                    name="email"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="insira seu email"
-                                    field={field}
-                                    error={!!errors?.email || !!customErrorMessage.email}
-                                    errorMessage={errors?.email?.message || customErrorMessage?.email}
+                                    customErrorMessage={customErrorMessage.email.toUpperCase()}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="avatar"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
+                                <InputControllerField
+                                    name="avatar"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="insira sua foto de perfil"
-                                    field={field}
-                                    error={!!errors?.avatar}
-                                    errorMessage={errors?.avatar?.message}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="slug"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
+                                <InputControllerField
+                                    name="slug"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="crie seu slug"
-                                    field={field}
-                                    error={!!errors?.slug || !!customErrorMessage.slug}
-                                    errorMessage={errors?.slug?.message || customErrorMessage?.slug}
+                                    customErrorMessage={customErrorMessage.slug.toUpperCase()}
                                 />
-                            )}
-                        />
-                        <Button disabled={disabledButton}>Salvar</Button>
-                    </form>
-                </div>
-                <div className={styles.preview}>
-                    <Preview />
-                </div>
-            </div>
+                                <Button disabled={disabledButton}>Salvar</Button>
+                            </form>
+                        </div>
+                        <div className={styles.preview}>
+                            <Preview />
+                        </div>
+                    </div>
+            }
         </>
     )
 };
-export default Profile;

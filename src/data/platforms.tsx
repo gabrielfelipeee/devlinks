@@ -1,6 +1,6 @@
 import { FaYoutube, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTwitter, FaPinterest, FaTiktok, FaSnapchatGhost, FaWhatsapp } from 'react-icons/fa';
 
-const platforms = [
+export const platforms = [
     { icon: FaYoutube, name: "YouTube" },
     { icon: FaFacebook, name: "Facebook" },
     { icon: FaGithub, name: "GitHub" },
@@ -12,4 +12,3 @@ const platforms = [
     { icon: FaSnapchatGhost, name: "Snapchat" },
     { icon: FaWhatsapp, name: "WhatsApp" }
 ];
-export default platforms;

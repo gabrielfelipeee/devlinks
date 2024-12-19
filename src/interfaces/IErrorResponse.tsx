@@ -1,6 +1,11 @@
-export interface IErrorResponse {
+export interface IError {
     response?: {
-        status?: number;
-        data?: any;
-    };
+        data?: {
+            status: number;
+            title: string;
+            detail: string;
+            extensions?: Record<string, unknown>;
+            errors?: Record<string, string[]>;
+        }
+    }
 }

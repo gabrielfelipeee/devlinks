@@ -1,79 +1,62 @@
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
-import InputField from "../../componenets/InputField";
-import InputFieldPassword from "../../componenets/InputFieldPassword";
-import Button from "../../componenets/Button";
-import useLogin from '../../hooks/useLogin';
-import ModalMessage from '../../componenets/ModalMessage';
-import { LoginFormData, loginFormSchema, useCustomForm } from '../../hooks/useFormSchema';
-import { Controller } from 'react-hook-form';
+import { loginSchema } from '../../schemas';
+import { useLoginService, useCustomForm } from '../../hooks';
+import { ModalMessage, Button, InputControllerField, Loading } from '../../components';
+import { USER_STATUS_MESSAGES } from '../../data';
 
-const Login = () => {
+export const Login = () => {
     const {
-        loginData,
-        showModal,
         login,
-        isError
-    } = useLogin();
+        errorLogin,
+        isErrorLogin,
+        isLoadingLogin
+    } = useLoginService();
     const {
         control,
         handleSubmit,
         formState: { errors }
-    } = useCustomForm<LoginFormData>(loginFormSchema);
+    } = useCustomForm({ schema: loginSchema });
 
     return (
         <>
             {
-                showModal && <ModalMessage message={loginData?.message!} typeMessage='error' />
+                (isErrorLogin && errorLogin?.response?.data?.authenticated === false) // Email ou senha incorretos
+                    ? <ModalMessage message={errorLogin.response?.data?.message!} status='error' />
+                    : isErrorLogin && <ModalMessage {...USER_STATUS_MESSAGES.LOGIN_ERROR} />
             }
             {
-                isError && <ModalMessage message="Erro ao fazer Login, tente novamente!" typeMessage='error' />
-            }
-            <section className={styles.container_login_register}>
-                <div className={styles.box_login_register}>
-                    <h2>Ainda não tem conta?</h2>
-                    <p>Cadastre-se agora</p>
-                    <Link to="/cadastro">Criar conta</Link>
-                </div>
-                <div className={styles.box_form}>
-                    <h1>Entre na sua conta</h1>
-                    <form
-                        noValidate
-                        onSubmit={handleSubmit((data) => login(data))}
-                    >
-                        <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
-                                    placeholder="email"
-                                    field={field}
-                                    error={!!errors?.email}
-                                    errorMessage={errors?.email?.message}
+                isLoadingLogin
+                    ? <Loading />
+                    : <section className={styles.container_login_register}>
+                        <div className={styles.box_login_register}>
+                            <h2>Ainda não tem conta?</h2>
+                            <p>Cadastre-se agora</p>
+                            <Link to="/cadastro">Criar conta</Link>
+                        </div>
+                        <div className={styles.box_form}>
+                            <h1>Entre na sua conta</h1>
+                            <form
+                                noValidate
+                                onSubmit={handleSubmit((data) => login(data))}
+                            >
+                                <InputControllerField
+                                    name="email"
+                                    control={control}
+                                    errors={errors}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="password"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputFieldPassword
+                                <InputControllerField
+                                    name="password"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="senha"
-                                    field={field}
-                                    error={!!errors?.password}
-                                    errorMessage={errors?.password?.message}
+                                    isPasswordField
                                 />
-                            )}
-                        />
-                        <Button>Entrar</Button>
-                    </form>
-                </div>
-            </section>
+                                <Button>Entrar</Button>
+                            </form>
+                        </div>
+                    </section>
+            }
         </>
     )
 }
-export default Login;

@@ -1,113 +1,80 @@
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
-import InputField from "../../componenets/InputField";
-import Button from "../../componenets/Button";
-import { RegisterFormData, registerFormSchema, useCustomForm } from '../../hooks/useFormSchema';
-import useRegister from '../../hooks/useRegister';
-import { Controller } from 'react-hook-form';
-import InputFieldPassword from '../../componenets/InputFieldPassword';
-import ModalMessage from '../../componenets/ModalMessage';
-import { useEffect, useState } from 'react';
+import { postUserSchema } from '../../schemas';
+import { useCustomForm, useUsersService } from '../../hooks';
+import { Button, InputControllerField, Loading, ModalMessage } from '../../components';
+import { useEmailAndSlugConflictErrorHandling } from '../../hooks';
+import { USER_STATUS_MESSAGES } from '../../data';
 
-const Register = () => {
+export const Register = () => {
     const {
-        registerUser,
-        isSuccess,
-        isError,
-        error
-    } = useRegister();
+        createUser,
+        errorCreateUser,
+        isSuccessCreateUser,
+        isErrorCreateUser,
+        isLoadingCreateUser
+    } = useUsersService();
     const {
         control,
         handleSubmit,
         formState: { errors },
         watch
-    } = useCustomForm<RegisterFormData>(registerFormSchema);
-    const watchEmail = watch('email');
+    } = useCustomForm({ schema: postUserSchema });
+    const {
+        customErrorMessage
+    } = useEmailAndSlugConflictErrorHandling({ watchEmail: watch("email"), error: errorCreateUser });
 
-    // Mensagem de erro (se já existir uma conta com o email)
-    const [customErrorMessageEmail, setCustomErrorMessageEmail] = useState<string | null>(null);
-    useEffect(() => {
-        if (error?.response?.status === 409) {
-            setCustomErrorMessageEmail(error?.response?.data);
-        }
-    }, [error]);
-    useEffect(() => {
-        if (customErrorMessageEmail) {
-            setCustomErrorMessageEmail(null);
-        }
-    }, [watchEmail]);
 
     return (
         <>
             {
-                isSuccess && <ModalMessage message="Usuário cadastrado com sucesso" typeMessage='success' />
+                isErrorCreateUser && (errorCreateUser?.response?.data?.status === 409) // Conflito
+                    ? <ModalMessage message={errorCreateUser.response.data?.detail!} status='alert' />
+                    : isErrorCreateUser && <ModalMessage {...USER_STATUS_MESSAGES.LOGIN_ERROR} />
             }
             {
-                isError && (error?.response?.status === 409)
-                    ? <ModalMessage message={error.response.data} typeMessage='alert' />
-                    : isError && <ModalMessage message="Ocorreu um erro ao cadastrar usuário" typeMessage='error' />
+                isSuccessCreateUser && <ModalMessage {...USER_STATUS_MESSAGES.CREATE_SUCCESS} />
             }
-            <section className={styles.container_login_register}>
-                <div className={styles.box_login_register}>
-                    <h2>Já tem uma conta?</h2>
-                    <p>Acesse sua conta agora</p>
-                    <Link to='/login'>Entrar</Link>
-                </div>
-                <div className={styles.box_form}>
-                    <h1>Crie sua conta</h1>
+            {
+                isLoadingCreateUser
+                    ? <Loading />
+                    : <section className={styles.container_login_register}>
+                        <div className={styles.box_login_register}>
+                            <h2>Já tem uma conta?</h2>
+                            <p>Acesse sua conta agora</p>
+                            <Link to='/login'>Entrar</Link>
+                        </div>
+                        <div className={styles.box_form}>
+                            <h1>Crie sua conta</h1>
 
-                    <form
-                        noValidate
-                        onSubmit={handleSubmit((data) => registerUser(data))}
-                    >
-                        <Controller
-                            name="name"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
+                            <form
+                                noValidate
+                                onSubmit={handleSubmit((data) => createUser(data))}
+                            >
+                                <InputControllerField
+                                    name="name"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="nome"
-                                    field={field}
-                                    error={!!errors?.name}
-                                    errorMessage={errors?.name?.message}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="email"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputField
-                                    placeholder="email"
-                                    field={field}
-                                    error={!!errors?.email || !!customErrorMessageEmail}
-                                    errorMessage={errors?.email?.message || customErrorMessageEmail!}
+                                <InputControllerField
+                                    name="email"
+                                    control={control}
+                                    errors={errors}
+                                    customErrorMessage={customErrorMessage.email}
                                 />
-                            )}
-                        />
-                        <Controller
-                            name="password"
-                            control={control}
-                            defaultValue=""
-                            shouldUnregister={false}
-                            render={({ field }) => (
-                                <InputFieldPassword
+                                <InputControllerField
+                                    name="password"
+                                    control={control}
+                                    errors={errors}
                                     placeholder="senha"
-                                    field={field}
-                                    error={!!errors?.password}
-                                    errorMessage={errors?.password?.message}
+                                    isPasswordField
                                 />
-                            )}
-                        />
-                        <Button>Cadastrar</Button>
-                    </form>
-                </div>
-            </section>
+                                <Button>Cadastrar</Button>
+                            </form>
+                        </div>
+                    </section>
+            }
         </>
-
     )
 }
-export default Register;
