@@ -4,7 +4,7 @@ import { useEmailAndSlugConflictErrorHandling, useProfile, useUsersService } fro
 import { USER_STATUS_MESSAGES } from '../../data';
 
 export const Profile = () => {
-    const token = sessionStorage.getItem("userIdAuthenticated");
+    const userIdAuthenticated = sessionStorage.getItem("userIdAuthenticated");
     const {
         control,
         errors,
@@ -49,7 +49,7 @@ export const Profile = () => {
                                 <span className={styles.text}>Adicione detalhes ao seu perfil</span>
                             </div>
                             <form
-                                onSubmit={handleSubmit((data) => updateUser({ ...data, id: token! }))}
+                                onSubmit={handleSubmit((userData) => updateUser({ id: userIdAuthenticated!, userData }))}
                                 className={styles.form}
                             >
                                 {imagePreview && (
@@ -68,7 +68,7 @@ export const Profile = () => {
                                     control={control}
                                     errors={errors}
                                     placeholder="insira seu email"
-                                    customErrorMessage={customErrorMessage.email.toUpperCase()}
+                                    customErrorMessage={customErrorMessage.email}
                                 />
                                 <InputControllerField
                                     name="avatar"
@@ -81,7 +81,7 @@ export const Profile = () => {
                                     control={control}
                                     errors={errors}
                                     placeholder="crie seu slug"
-                                    customErrorMessage={customErrorMessage.slug.toUpperCase()}
+                                    customErrorMessage={customErrorMessage.slug}
                                 />
                                 <Button disabled={disabledButton}>Salvar</Button>
                             </form>
@@ -89,7 +89,7 @@ export const Profile = () => {
                         <div className={styles.preview}>
                             <Preview />
                         </div>
-                    </div>
+                    </div >
             }
         </>
     )

@@ -32,9 +32,9 @@ export const linkService = {
         }
     },
 
-    putLink: async (linkData: IPostAndPutLink) => {
+    putLink: async (id: string, linkData: IPostAndPutLink) => {
         try {
-            const response = await api.put('/links', linkData);
+            const response = await api.put(`/links/${id}`, linkData);
             return response.data;
         } catch (error) {
             console.error("Erro ao atualizar link:", error);

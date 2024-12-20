@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { linkService } from '../../services'
+import { IPostAndPutLink } from '../../interfaces';
 
 export const useLinksService = () => {
     const queryClient = useQueryClient();
     const isUserAuthenticated = sessionStorage.getItem("userIdAuthenticated") !== null;
 
     // Busca links pelo id do usuário
-    const getLinksByUserId = (userId: string) => {
+    const queryLinksByUserId = (userId: string) => {
         return useQuery(
             ["links-userId", userId],
             () => linkService.getLinksByUserId(userId),
@@ -17,10 +18,11 @@ export const useLinksService = () => {
     };
 
     // Busca os Links do usuário autenticado
-    const queryLinksUserAuthenticated = useQuery("links-userAuthenticated", linkService.getLinksUserAuthenticated, {
-        enabled: isUserAuthenticated
-    });
-
+    const queryLinksUserAuthenticated = useQuery("links-userAuthenticated", linkService.getLinksUserAuthenticated,
+        {
+            enabled: isUserAuthenticated
+        }
+    );
 
     const createLinkMutation = useMutation(linkService.postLink, {
         onSuccess: () => {
@@ -28,11 +30,14 @@ export const useLinksService = () => {
         }
     });
 
-    const updateLinkMutation = useMutation(linkService.putLink, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('links-userAuthenticated')
+    const updateLinkMutation = useMutation(
+        ({ id, linkData }: { id: string, linkData: IPostAndPutLink }) => linkService.putLink(id, linkData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('links-userAuthenticated')
+            }
         }
-    });
+    );
 
     const deleteLinkMutation = useMutation(linkService.deleteLink, {
         onSuccess: () => {
@@ -41,7 +46,7 @@ export const useLinksService = () => {
     });
 
     return {
-        getLinksByUserId,
+        queryLinksByUserId,
 
         linksUserAuthenticated: queryLinksUserAuthenticated.data,
         isLoadinglinkAuthenticated: queryLinksUserAuthenticated.isLoading,
@@ -51,8 +56,8 @@ export const useLinksService = () => {
         isErrorCreateLink: createLinkMutation.isError,
 
         updateLink: updateLinkMutation.mutate,
-        isErrorUpdateLink: updateLinkMutation.isError,
         isSuccessUpdateLink: updateLinkMutation.isSuccess,
+        isErrorUpdateLink: updateLinkMutation.isError,
 
         deleteLink: deleteLinkMutation.mutate
     }

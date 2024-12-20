@@ -35,7 +35,7 @@ export const CardRegisterLinks = ({
         isSuccessUpdateLink,
         isErrorUpdateLink
     } = useCardRegisterLinks({
-        idLink: idCurrentLink,
+        linkId: idCurrentLink,
         currentLink: currentLink
     });
 
@@ -73,7 +73,7 @@ export const CardRegisterLinks = ({
                     />
                 </div>
                 <form
-                    onSubmit={handleSubmit((data) => onSubmit(data, idCurrentLink))}
+                    onSubmit={handleSubmit((linkData) => onSubmit(idCurrentLink, linkData))}
                     className={styles.form}
                 >
                     <Controller

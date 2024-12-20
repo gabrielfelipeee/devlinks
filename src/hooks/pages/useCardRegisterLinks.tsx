@@ -4,14 +4,14 @@ import { postAndPutLinkSchema } from '../../schemas';
 import { IGetLink, IPostAndPutLink } from '../../interfaces';
 
 interface IUseCardRegisterLinksProps {
-    idLink: string,
+    linkId: string,
     currentLink: IGetLink
 };
 
 
 // Hook para o componente CardRegisterLinks
 export const useCardRegisterLinks = ({
-    idLink,
+    linkId,
     currentLink
 }: IUseCardRegisterLinksProps) => {
     const [disabledButton, setDisabledButton] = useState(false);
@@ -54,17 +54,17 @@ export const useCardRegisterLinks = ({
 
     }, [watchLink, watchPlatform, currentLink]);
 
-    const onSubmit = (data: IPostAndPutLink, id: string) => {
+    const onSubmit = (id: string, linkData: IPostAndPutLink) => {
         if (id?.length > 0) {
-            updateLink({ ...data, id });
+            updateLink({ id, linkData });
         } else {
-            createLink(data);
+            createLink(linkData);
         }
     };
 
     const handleRemove = () => {
         removeCard();
-        idLink && deleteLink(idLink);
+        linkId && deleteLink(linkId);
         setIsModalOpen(false);
     };
 

@@ -1,5 +1,4 @@
 export interface ILoginSuccessResponse {
-
     created: string,
     expiration: string,
     acessToken: string,

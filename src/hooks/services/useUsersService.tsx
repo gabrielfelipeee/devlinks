@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { userService } from '../../services'
-import { IError } from '../../interfaces';
+import { IError, IPutUser } from '../../interfaces';
 import { useNavigate } from 'react-router-dom';
 
 export const useUsersService = () => {
@@ -9,7 +9,7 @@ export const useUsersService = () => {
     const isUserAuthenticated = sessionStorage.getItem("userIdAuthenticated") !== null;
 
     // Busca o usuário pelo id
-    const getUserById = (id: string) => {
+    const queryUserById = (id: string) => {
         return useQuery(
             ["user-by-id", id],
             () => userService.getUserById(id), {
@@ -19,7 +19,7 @@ export const useUsersService = () => {
     };
 
     // Busca o usuário pelo slug
-    const getUserBySlug = (slug: string) => {
+    const queryUserBySlug = (slug: string) => {
         return useQuery(
             ["user-by-slug", slug],
             () => userService.getUserBySlug(slug), {
@@ -41,15 +41,18 @@ export const useUsersService = () => {
         }
     });
 
-    const updateUserMutation = useMutation(userService.putUser, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('user-authenticated');
+    const updateUserMutation = useMutation(
+        ({ id, userData }: { id: string, userData: IPutUser }) => userService.putUser(id, userData),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries('user-authenticated');
+            }
         }
-    });
+    );
 
     return {
-        getUserById,
-        getUserBySlug,
+        queryUserById,
+        queryUserBySlug,
 
         userAuthenticated: getUserAuthenticated.data,
         isLoadingUserAuthenticated: getUserAuthenticated.isLoading,

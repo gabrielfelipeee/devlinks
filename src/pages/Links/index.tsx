@@ -15,25 +15,25 @@ export const Links = () => {
     const identifier = pathname.substring(1);
     const token = sessionStorage.getItem("token");
 
-    const { getUserById, getUserBySlug } = useUsersService();
-    const { getLinksByUserId } = useLinksService();
+    const { queryUserById, queryUserBySlug } = useUsersService();
+    const { queryLinksByUserId } = useLinksService();
 
     const {
         data: currentUser,
-        isLoading: isLoadingGetUser,
-        isError: isErrorGetUser
-    } = isGuid(identifier) ? getUserById(identifier) : getUserBySlug(identifier);
+        isLoading: isLoadingQueryCurrentUser,
+        isError: isErrorQueryCurrentUser
+    } = isGuid(identifier) ? queryUserById(identifier) : queryUserBySlug(identifier);
 
     const {
         data: linksCurrentUser,
-        isLoading: isLoadingLinks
-    } = getLinksByUserId(currentUser?.id!);
+        isLoading: isLoadingLinksCurrentUser
+    } = queryLinksByUserId(currentUser?.id!);
 
-    isErrorGetUser && navigate('*');
+    isErrorQueryCurrentUser && navigate('*');
     return (
         <>
             {
-                isLoadingLinks || isLoadingGetUser
+                isLoadingQueryCurrentUser || isLoadingLinksCurrentUser
                     ? <Loading />
                     : <div className={styles.container_links}>
                         <div className={styles.box_links}>
