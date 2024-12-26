@@ -50,6 +50,20 @@
                 &:hover {
                     @include animate_button(var(--secondary-color), var(--primary-color));
                 }
+
+                &:disabled {
+                    cursor: not-allowed;
+                    background-color: lightgray;
+                    color: grey;
+                    border: 2px solid lightgray;
+                    transform: scale(1);
+                    opacity: 0.6;
+
+                    &:hover {
+                        background-color: lightgray;
+                        color: grey;
+                    }
+                }
             }
         }
 

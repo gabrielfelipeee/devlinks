@@ -1,18 +1,40 @@
 import styles from './styles.module.scss';
 import { FiPlus } from 'react-icons/fi';
 import { useRegisterLinks } from '../../hooks';
-import { Preview, CardRegisterLinks, Loading } from '../../components';
+import { Preview, CardRegisterLinks, Loading, ModalMessage } from '../../components';
+import { LINK_STATUS_MESSAGES } from '../../data';
 
 export const RegisterLinks = () => {
     const {
-        counterLinks,
+        handleSaveOrUpdateLink,
+        handleDeleteLink,
         addCard,
+        counterLinks,
+        isModalOpen,
+        setIsModalOpen,
+
         linksUserAuthenticated = [],
-        isLoadinglinkAuthenticated
+        isLoadinglinkAuthenticated,
+        isSuccessCreateLink,
+        isErrorCreateLink,
+        isErrorUpdateLink,
+        isSuccessUpdateLink
     } = useRegisterLinks();
 
     return (
         <>
+            {
+                isSuccessCreateLink && <ModalMessage {...LINK_STATUS_MESSAGES.CREATE_SUCCESS} />
+            }
+            {
+                isErrorCreateLink && <ModalMessage {...LINK_STATUS_MESSAGES.CREATE_ERROR} />
+            }
+            {
+                isSuccessUpdateLink && <ModalMessage {...LINK_STATUS_MESSAGES.UPDATE_SUCCESS} />
+            }
+            {
+                isErrorUpdateLink && <ModalMessage {...LINK_STATUS_MESSAGES.UPDATE_ERROR} />
+            }
             {
                 isLoadinglinkAuthenticated
                     ? <Loading />
@@ -22,22 +44,32 @@ export const RegisterLinks = () => {
                                 <h1 className={styles.h1}>Adicione seus links</h1>
                                 <span className={styles.text}>Adicione seus links abaixo e compartilhe todos os seus perfis com o mundo!</span>
                                 <button
+                                    disabled={counterLinks.length >= 5 || counterLinks.length >= linksUserAuthenticated.length + 1}
                                     className={styles.btn_add}
                                     onClick={addCard}
                                 >
-                                    <FiPlus />
-                                    Adicionar novo link
+                                    {
+                                        counterLinks.length >= 5
+                                            ? "Você pode ter até 5 links"
+                                            : <>
+                                                <FiPlus />
+                                                Adicionar novo link
+                                            </>
+                                    }
                                 </button>
                             </div>
 
                             <div className={styles.box_cards}>
                                 {
-                                    counterLinks.map((item, index) => (
+                                    counterLinks.map((numberLink, index) => (
                                         <CardRegisterLinks
                                             key={index}
-                                            idCurrentLink={linksUserAuthenticated[index]?.id!}
-                                            indexLink={item}
                                             currentLink={linksUserAuthenticated[index]}
+                                            numberLink={numberLink}
+                                            onSubmit={handleSaveOrUpdateLink}
+                                            deleteLink={handleDeleteLink}
+                                            setIsModalOpen={setIsModalOpen}
+                                            isModalOpen={isModalOpen}
                                         />
                                     ))
                                 }

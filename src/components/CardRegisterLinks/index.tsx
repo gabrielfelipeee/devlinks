@@ -1,70 +1,70 @@
 import styles from './styles.module.scss';
 import { IoClose } from "react-icons/io5";
 import { Controller } from 'react-hook-form';
-import { Button, InputControllerField, ModalConfirm, ModalMessage, } from '../../components';
+import { Button, InputControllerField, ModalConfirm } from '../../components';
 import { ListDropDown } from './components/ListDropDown';
-import { useCardRegisterLinks } from '../../hooks';
-import { IGetLink } from '../../interfaces';
-import { LINK_STATUS_MESSAGES } from '../../data';
+import { useCustomForm } from '../../hooks';
+import { IGetLink, IPostAndPutLink } from '../../interfaces';
+import { postAndPutLinkSchema } from '../../schemas';
+import { useEffect, useState } from 'react';
 
 interface ICardRegisterLinksProps {
-    idCurrentLink: string,
-    indexLink: number,
-    currentLink: IGetLink
+    currentLink: IGetLink,
+    numberLink: number,
+    onSubmit: (id: string, dataLink: IPostAndPutLink) => void,
+    deleteLink: (id: string) => void,
+    isModalOpen: boolean,
+    setIsModalOpen: (isOpen: boolean) => void
 };
 
 export const CardRegisterLinks = ({
-    indexLink,
-    idCurrentLink,
-    currentLink
+    numberLink,
+    currentLink,
+    onSubmit,
+    setIsModalOpen,
+    deleteLink,
+    isModalOpen
 }: ICardRegisterLinksProps) => {
-
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
     const {
         control,
-        errors,
         handleSubmit,
-        onSubmit,
+        formState: { errors },
+        reset,
+        watch
+    } = useCustomForm({ schema: postAndPutLinkSchema });
 
-        handleRemove,
-        disabledButton,
-        isModalOpen,
-        setIsModalOpen,
+    useEffect(() => {
+        if (currentLink) {
+            reset({
+                link: currentLink.link || "",
+                platform: currentLink.platform || ""
+            });
+        }
+    }, [currentLink, reset]);
 
-        isSuccessCreateLink,
-        isErrorCreateLink,
-        isSuccessUpdateLink,
-        isErrorUpdateLink
-    } = useCardRegisterLinks({
-        linkId: idCurrentLink,
-        currentLink: currentLink
-    });
+    useEffect(() => {
+        if (currentLink?.link === watch("link") && currentLink?.platform === watch("platform")) {
+            setIsButtonDisabled(true);
+        } else {
+            setIsButtonDisabled(false);
+        }
+    }, [currentLink, watch("link"), watch("platform")])
 
     return (
         <>
-            {
-                isSuccessCreateLink && <ModalMessage {...LINK_STATUS_MESSAGES.CREATE_SUCCESS} />
-            }
-            {
-                isErrorCreateLink && <ModalMessage {...LINK_STATUS_MESSAGES.CREATE_ERROR} />
-            }
-            {
-                isSuccessUpdateLink && <ModalMessage {...LINK_STATUS_MESSAGES.UPDATE_SUCCESS} />
-            }
-            {
-                isErrorUpdateLink && <ModalMessage {...LINK_STATUS_MESSAGES.UPDATE_ERROR} />
-            }
             {
                 isModalOpen && <ModalConfirm
                     title="Confirmação"
                     message="Você realmente deseja excluir o link?"
                     onCancel={() => setIsModalOpen(false)}
-                    onConfirm={handleRemove}
+                    onConfirm={() => deleteLink(currentLink?.id)}
                 />
             }
             <div className={styles.container_card}>
                 <div className={styles.box_text}>
                     <div className={styles.index_link}>
-                        = Link #<span>{indexLink}
+                        = Link #<span>{numberLink}
                         </span>
                     </div>
                     <IoClose
@@ -73,13 +73,12 @@ export const CardRegisterLinks = ({
                     />
                 </div>
                 <form
-                    onSubmit={handleSubmit((linkData) => onSubmit(idCurrentLink, linkData))}
+                    onSubmit={handleSubmit((data) => onSubmit(currentLink?.id, data))}
                     className={styles.form}
                 >
                     <Controller
                         name="platform"
                         control={control}
-                        defaultValue=""
                         shouldUnregister={false}
                         render={({ field }) => (
                             <ListDropDown
@@ -95,7 +94,7 @@ export const CardRegisterLinks = ({
                         errors={errors}
                         placeholder="Insira seu Link"
                     />
-                    <Button disabled={disabledButton}>
+                    <Button disabled={isButtonDisabled}>
                         {
                             currentLink ? "atualizar" : "adicionar"
                         }
