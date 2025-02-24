@@ -30,7 +30,7 @@ export const Register = () => {
             {
                 isErrorCreateUser && (errorCreateUser?.response?.data?.status === 409) // Conflito
                     ? <ModalMessage message={errorCreateUser.response.data?.detail!} status='alert' />
-                    : isErrorCreateUser && <ModalMessage {...USER_STATUS_MESSAGES.LOGIN_ERROR} />
+                    : isErrorCreateUser && <ModalMessage {...USER_STATUS_MESSAGES.CREATE_ERROR} />
             }
             {
                 isSuccessCreateUser && <ModalMessage {...USER_STATUS_MESSAGES.CREATE_SUCCESS} />

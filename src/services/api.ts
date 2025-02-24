@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:5207/api';
+const API_URL = 'https://devlinks-b6gzceg5eygdbafp.canadacentral-01.azurewebsites.net/api';
 
 const api = axios.create({
     baseURL: API_URL
@@ -14,9 +14,7 @@ api.interceptors.request.use(
 
         // Rotas que não precisam de token
         const noAuthRoutes = [
-            { url: '/users', method: 'get' }, // getAllUsers
             { url: '/users', method: 'post' }, // postUser
-            { url: '/links', method: 'get' }, // getAllLinks
             { url: '/login', method: 'post' } // Login
         ];
 
