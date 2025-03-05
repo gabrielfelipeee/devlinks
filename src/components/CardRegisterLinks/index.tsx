@@ -12,20 +12,18 @@ interface ICardRegisterLinksProps {
     currentLink: IGetLink,
     numberLink: number,
     onSubmit: (id: string, dataLink: IPostAndPutLink) => void,
-    deleteLink: (id: string) => void,
-    isModalOpen: boolean,
-    setIsModalOpen: (isOpen: boolean) => void
+    deleteLink: (id: string) => void
 };
 
 export const CardRegisterLinks = ({
     numberLink,
     currentLink,
     onSubmit,
-    setIsModalOpen,
-    deleteLink,
-    isModalOpen
+    deleteLink
 }: ICardRegisterLinksProps) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
     const {
         control,
         handleSubmit,
@@ -58,7 +56,10 @@ export const CardRegisterLinks = ({
                     title="Confirmação"
                     message="Você realmente deseja excluir o link?"
                     onCancel={() => setIsModalOpen(false)}
-                    onConfirm={() => deleteLink(currentLink?.id)}
+                    onConfirm={() => {
+                        deleteLink(currentLink?.id);
+                        setIsModalOpen(false);
+                    }}
                 />
             }
             <div className={styles.container_card}>

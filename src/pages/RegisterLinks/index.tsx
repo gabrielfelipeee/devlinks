@@ -10,8 +10,6 @@ export const RegisterLinks = () => {
         handleDeleteLink,
         addCard,
         counterLinks,
-        isModalOpen,
-        setIsModalOpen,
 
         linksUserAuthenticated = [],
         isLoadinglinkAuthenticated,
@@ -68,8 +66,6 @@ export const RegisterLinks = () => {
                                             numberLink={numberLink}
                                             onSubmit={handleSaveOrUpdateLink}
                                             deleteLink={handleDeleteLink}
-                                            setIsModalOpen={setIsModalOpen}
-                                            isModalOpen={isModalOpen}
                                         />
                                     ))
                                 }

@@ -5,8 +5,8 @@ import { IoClose } from "react-icons/io5";
 interface IModalConfirmProps {
   title: string,
   message: string,
-  onCancel: () => void,
-  onConfirm: () => void
+  onCancel: VoidFunction,
+  onConfirm: VoidFunction
 }
 
 export const ModalConfirm = (

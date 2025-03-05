@@ -5,7 +5,6 @@ import { useLinksService } from '../../hooks';
 // Hook para a página RegisterLinks
 export const useRegisterLinks = () => {
     const [counterLinks, setCounterLinks] = useState<number[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const {
         linksUserAuthenticated = [],
@@ -40,10 +39,6 @@ export const useRegisterLinks = () => {
             setCounterLinks(prev => [...prev, prev.length + 1]);
     };
 
-    const removeCard = () => {
-        setCounterLinks(prev => prev.slice(0, -1));
-    };
-
     const handleSaveOrUpdateLink = (id: string, linkData: IPostAndPutLink) => {
         if (id) {
             updateLink({ id, linkData });
@@ -51,18 +46,20 @@ export const useRegisterLinks = () => {
             createLink(linkData);
         }
     };
-    const handleDeleteLink = (id: string) => {
-        deleteLink(id);
-        removeCard();
-        setIsModalOpen(false);
+
+    const removeCard = () => {
+        setCounterLinks(prev => prev.slice(0, -1));
     };
+    const handleDeleteLink = (id: string) => {
+        id && deleteLink(id);
+        removeCard();
+    };
+
     return {
         handleSaveOrUpdateLink,
         handleDeleteLink,
         addCard,
         counterLinks,
-        isModalOpen,
-        setIsModalOpen,
 
         linksUserAuthenticated,
         isLoadinglinkAuthenticated,
